@@ -14,6 +14,8 @@ connectDB();
 // middleware
 app.use(cors());
 app.use(express.json());
+
+//routes
 app.use("/api/leads", leadRoutes);
 
 // test route
