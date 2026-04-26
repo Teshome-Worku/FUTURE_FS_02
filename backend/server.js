@@ -3,6 +3,7 @@ import dotenv from "dotenv";
 import cors from "cors";
 import connectDB from "./config/db.js";
 import leadRoutes from "./routes/leadRoutes.js";
+import noteRoutes from "./routes/noteRoutes.js";
 
 dotenv.config();
 
@@ -15,16 +16,19 @@ connectDB();
 app.use(cors());
 app.use(express.json());
 
-//routes
+//lead routes
 app.use("/api/leads", leadRoutes);
+
+//note routes
+app.use("/api/notes", noteRoutes);
 
 // test route
 app.get("/", (req, res) => {
-  res.send("API is running...");
+    res.send("API is running...");
 });
 
 const PORT = process.env.PORT || 5000;
 
 app.listen(PORT, () => {
-  console.log(`Server running at http://localhost:${PORT}`);
+    console.log(`Server running at http://localhost:${PORT}`);
 });
