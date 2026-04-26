@@ -56,11 +56,17 @@ export const loginUser = async (req, res) => {
             password
         } = req.body;
 
+        if (!email?.trim() || !password?.trim()) {
+            return res.status(400).json({
+                message: "Email and password are required"
+            });
+        }
+
         const user = await User.findOne({
-            email
+            email: email.trim()
         });
 
-        if (user && (await bcrypt.compare(password, user.password))) {
+        if (user && (await bcrypt.compare(password.trim(), user.password))) {
             res.json({
                 _id: user._id,
                 email: user.email,

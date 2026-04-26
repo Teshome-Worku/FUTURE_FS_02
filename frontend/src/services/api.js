@@ -1,22 +1,31 @@
 const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
-export const getLeads = async (token) => {
-    if (!token) {
-        // throw new Error("No auth token found. Please login again.");
-        window.location.href = "/login";
-        // return [];
+const isValidToken = (token) => {
+    if (typeof token !== "string") {
+        return false;
     }
+
+    const normalized = token.trim();
+    return normalized !== "" && normalized !== "undefined" && normalized !== "null";
+};
+
+export const getLeads = async (token) => {
+    if (!isValidToken(token)) {
+        throw new Error("No auth token found. Please login again.");
+    }
+
+    const normalizedToken = token.trim();
 
     const res = await fetch(`${API_URL}/leads`, {
         headers: {
-            Authorization: `Bearer ${token}`,
+            Authorization: `Bearer ${normalizedToken}`,
         },
     });
 
     const data = await res.json();
 
     if (!res.ok) {
-        throw new Error(data && data.message || "Failed to fetch leads");
+        throw new Error((data && data.message) || "Failed to fetch leads");
     }
 
     if (!Array.isArray(data)) {

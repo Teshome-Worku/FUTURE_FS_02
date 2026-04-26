@@ -3,6 +3,15 @@
 import { useEffect, useState } from "react";
 import { getLeads } from "@/services/api";
 
+const isValidToken = (token) => {
+  if (typeof token !== "string") {
+    return false;
+  }
+
+  const normalized = token.trim();
+  return normalized !== "" && normalized !== "undefined" && normalized !== "null";
+};
+
 export default function Dashboard() {
   const [leads, setLeads] = useState([]);
   const [error, setError] = useState("");
@@ -10,11 +19,24 @@ export default function Dashboard() {
 
   useEffect(() => {
     const fetchLeads = async () => {
+      const token = localStorage.getItem("token");
+
+      if (!isValidToken(token)) {
+        localStorage.removeItem("token");
+        window.location.replace("/login");
+        return;
+      }
+
       try {
-        const token = localStorage.getItem("token");
         const data = await getLeads(token);
         setLeads(Array.isArray(data) ? data : []);
       } catch (err) {
+        if (err.message === "No auth token found. Please login again.") {
+          localStorage.removeItem("token");
+          window.location.replace("/login");
+          return;
+        }
+
         setError(err.message || "Unable to load leads");
         setLeads([]);
       } finally {
