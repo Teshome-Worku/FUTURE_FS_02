@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { useEffect, useState } from "react";
 import { getLeads } from "@/services/api";
 
@@ -16,6 +17,18 @@ export default function Dashboard() {
   const [leads, setLeads] = useState([]);
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(true);
+
+  const totalLeads = leads.length;
+  const newLeads = leads.filter((lead) => lead.status === "new").length;
+  const contactedLeads = leads.filter((lead) => lead.status === "contacted").length;
+  const convertedLeads = leads.filter((lead) => lead.status === "converted").length;
+
+  const summaryCards = [
+    { title: "Total Leads", value: totalLeads, icon: "TL" },
+    { title: "New Leads", value: newLeads, icon: "NW" },
+    { title: "Contacted Leads", value: contactedLeads, icon: "CT" },
+    { title: "Converted Leads", value: convertedLeads, icon: "CV" },
+  ];
 
   useEffect(() => {
     const fetchLeads = async () => {
@@ -48,20 +61,58 @@ export default function Dashboard() {
   }, []);
 
   return (
-    <div className="p-6">
-      <h1 className="text-2xl mb-4">Leads</h1>
+    <section>
+      <h1 className="mb-2 text-2xl font-semibold text-gray-900">Overview</h1>
+      <p className="mb-6 text-sm text-gray-600">Lead performance snapshot</p>
 
-      {loading && <p>Loading leads...</p>}
-      {!loading && error && <p className="text-red-500">{error}</p>}
-      {!loading && !error && leads.length === 0 && <p>No leads found.</p>}
+      <div className="mb-8 grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+        {summaryCards.map((card) => (
+          <article
+            key={card.title}
+            className="rounded-lg border border-gray-200 bg-white p-5 shadow-sm"
+          >
+            <div className="mb-3 flex items-center justify-between">
+              <p className="text-sm font-medium text-gray-600">{card.title}</p>
+              <span className="inline-flex h-8 w-8 items-center justify-center rounded-full bg-gray-900 text-xs font-semibold text-white">
+                {card.icon}
+              </span>
+            </div>
+            <p className="text-3xl font-semibold text-gray-900">{card.value}</p>
+          </article>
+        ))}
+      </div>
 
-      {leads.map((lead) => (
-        <div key={lead._id} className="border p-4 mb-3">
-          <h2>{lead.name}</h2>
-          <p>{lead.email}</p>
-          <p>Status: {lead.status}</p>
+      <h2 className="mb-4 text-xl font-semibold text-gray-900">Leads</h2>
+
+      {loading && (
+        <div className="rounded-lg border border-gray-200 bg-white p-4 text-gray-600">
+          Loading leads...
         </div>
-      ))}
-    </div>
+      )}
+
+      {!loading && error && (
+        <div className="rounded-lg border border-red-200 bg-red-50 p-4 text-red-600">
+          {error}
+        </div>
+      )}
+
+      {!loading && !error && leads.length === 0 && (
+        <div className="rounded-lg border border-gray-200 bg-white p-4 text-gray-600">
+          No leads found.
+        </div>
+      )}
+
+      <div className="space-y-4">
+        {leads.map((lead) => (
+          <Link key={lead._id} href={`/dashboard/${lead._id}`} className="block">
+            <article className="cursor-pointer rounded-lg border border-gray-200 bg-white p-5 shadow-sm transition hover:bg-gray-50">
+              <h3 className="text-lg font-medium text-gray-900">{lead.name}</h3>
+              <p className="mt-1 text-sm text-gray-600">{lead.email}</p>
+              <p className="mt-2 text-sm text-gray-700">Status: {lead.status}</p>
+            </article>
+          </Link>
+        ))}
+      </div>
+    </section>
   );
 }
