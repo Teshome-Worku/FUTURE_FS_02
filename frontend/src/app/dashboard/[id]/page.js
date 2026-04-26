@@ -20,9 +20,12 @@ export default function LeadDetailPage() {
   const params = useParams();
   const leadId = params?.id;
   const [lead, setLead] = useState(null);
+  const [notes, setNotes] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [updatingStatus, setUpdatingStatus] = useState("");
+  const [noteInput, setNoteInput] = useState("");
+  const [addingNote, setAddingNote] = useState(false);
 
   useEffect(() => {
     const fetchLead = async () => {
@@ -35,8 +38,22 @@ export default function LeadDetailPage() {
       }
 
       try {
-        const data = await getLeads(token);
-        const selectedLead = data.find((item) => item._id === leadId);
+        const [leadsData, notesRes] = await Promise.all([
+          getLeads(token),
+          fetch(`${API_URL}/notes/${leadId}`, {
+            headers: {
+              Authorization: `Bearer ${token.trim()}`,
+            },
+          }),
+        ]);
+
+        const notesData = await notesRes.json();
+
+        if (!notesRes.ok) {
+          throw new Error(notesData?.message || "Failed to fetch notes");
+        }
+
+        const selectedLead = leadsData.find((item) => item._id === leadId);
 
         if (!selectedLead) {
           setError("Lead not found.");
@@ -45,6 +62,11 @@ export default function LeadDetailPage() {
         }
 
         setLead(selectedLead);
+        const normalizedNotes = Array.isArray(notesData) ? notesData : [];
+        const sortedNotes = [...normalizedNotes].sort(
+          (a, b) => new Date(b.createdAt) - new Date(a.createdAt)
+        );
+        setNotes(sortedNotes);
       } catch (err) {
         if (err.message === "No auth token found. Please login again.") {
           localStorage.removeItem("token");
@@ -103,6 +125,50 @@ export default function LeadDetailPage() {
       setError(err.message || "Unable to update lead status");
     } finally {
       setUpdatingStatus("");
+    }
+  };
+
+  const handleAddNote = async (e) => {
+    e.preventDefault();
+
+    const token = localStorage.getItem("token");
+    const content = noteInput.trim();
+
+    if (!isValidToken(token)) {
+      localStorage.removeItem("token");
+      window.location.replace("/login");
+      return;
+    }
+
+    if (!content || !leadId) {
+      return;
+    }
+
+    try {
+      setAddingNote(true);
+      setError("");
+
+      const res = await fetch(`${API_URL}/notes/${leadId}`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token.trim()}`,
+        },
+        body: JSON.stringify({ content }),
+      });
+
+      const data = await res.json();
+
+      if (!res.ok) {
+        throw new Error(data?.message || "Failed to add note");
+      }
+
+      setNoteInput("");
+      setNotes((prev) => [data, ...prev]);
+    } catch (err) {
+      setError(err.message || "Unable to add note");
+    } finally {
+      setAddingNote(false);
     }
   };
 
@@ -181,6 +247,47 @@ export default function LeadDetailPage() {
             </div>
           </div>
         </div>
+      </article>
+
+      <article className="rounded-lg border border-gray-200 bg-white p-6 shadow-sm">
+        <h2 className="mb-4 text-xl font-semibold text-gray-900">Notes</h2>
+
+        <form onSubmit={handleAddNote} className="mb-5 space-y-3">
+          <textarea
+            value={noteInput}
+            onChange={(e) => setNoteInput(e.target.value)}
+            placeholder="Write a note..."
+            className="min-h-24 w-full rounded-md border border-gray-300 p-3 text-sm text-gray-800 outline-none transition focus:border-gray-400"
+          />
+          <button
+            type="submit"
+            disabled={addingNote || !noteInput.trim()}
+            className="rounded-md bg-gray-900 px-4 py-2 text-sm font-medium text-white transition hover:bg-gray-800 disabled:cursor-not-allowed disabled:opacity-60"
+          >
+            {addingNote ? "Adding..." : "Add Note"}
+          </button>
+        </form>
+
+        {notes.length === 0 ? (
+          <p className="text-gray-600">No notes available for this lead.</p>
+        ) : (
+          <div className="space-y-3">
+            {notes.map((note) => (
+              <div
+                key={note._id}
+                className="rounded-lg border border-gray-200 bg-gray-50 p-4"
+              >
+                <p className="text-sm text-gray-800">{note.content}</p>
+                <p className="mt-2 text-xs text-gray-500">
+                  {new Date(note.createdAt).toLocaleString(undefined, {
+                    dateStyle: "medium",
+                    timeStyle: "short",
+                  })}
+                </p>
+              </div>
+            ))}
+          </div>
+        )}
       </article>
     </section>
   );
