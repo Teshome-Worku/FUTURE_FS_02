@@ -5,6 +5,8 @@ import { useParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import { getLeads } from "@/services/api";
 
+const API_URL = process.env.NEXT_PUBLIC_API_URL;
+
 const isValidToken = (token) => {
   if (typeof token !== "string") {
     return false;
@@ -20,6 +22,7 @@ export default function LeadDetailPage() {
   const [lead, setLead] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
+  const [updatingStatus, setUpdatingStatus] = useState("");
 
   useEffect(() => {
     const fetchLead = async () => {
@@ -59,6 +62,49 @@ export default function LeadDetailPage() {
       fetchLead();
     }
   }, [leadId]);
+
+  const handleStatusUpdate = async (nextStatus) => {
+    const token = localStorage.getItem("token");
+
+    if (!isValidToken(token)) {
+      localStorage.removeItem("token");
+      window.location.replace("/login");
+      return;
+    }
+
+    if (!leadId || lead?.status === nextStatus) {
+      return;
+    }
+
+    try {
+      setUpdatingStatus(nextStatus);
+      setError("");
+
+      const res = await fetch(`${API_URL}/leads/${leadId}/status`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token.trim()}`,
+        },
+        body: JSON.stringify({ status: nextStatus }),
+      });
+
+      const data = await res.json();
+
+      if (!res.ok) {
+        throw new Error(data?.message || "Failed to update lead status");
+      }
+
+      setLead((prev) => ({
+        ...prev,
+        status: data?.status || nextStatus,
+      }));
+    } catch (err) {
+      setError(err.message || "Unable to update lead status");
+    } finally {
+      setUpdatingStatus("");
+    }
+  };
 
   if (loading) {
     return (
@@ -115,6 +161,24 @@ export default function LeadDetailPage() {
             <p className="mt-1 text-base font-medium capitalize text-gray-900">
               {lead.status || "unknown"}
             </p>
+            <div className="mt-4 flex flex-wrap gap-3">
+              <button
+                type="button"
+                onClick={() => handleStatusUpdate("contacted")}
+                disabled={lead.status === "contacted" || updatingStatus !== ""}
+                className="rounded-md bg-blue-600 px-4 py-2 text-sm font-medium text-white transition hover:bg-blue-700 disabled:cursor-not-allowed disabled:opacity-60"
+              >
+                {updatingStatus === "contacted" ? "Updating..." : "Mark Contacted"}
+              </button>
+              <button
+                type="button"
+                onClick={() => handleStatusUpdate("converted")}
+                disabled={lead.status === "converted" || updatingStatus !== ""}
+                className="rounded-md bg-green-600 px-4 py-2 text-sm font-medium text-white transition hover:bg-green-700 disabled:cursor-not-allowed disabled:opacity-60"
+              >
+                {updatingStatus === "converted" ? "Updating..." : "Mark Converted"}
+              </button>
+            </div>
           </div>
         </div>
       </article>
