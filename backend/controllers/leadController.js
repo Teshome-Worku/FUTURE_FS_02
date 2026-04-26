@@ -35,18 +35,41 @@ export const getLeads = async (req, res) => {
 // @desc Update lead status
 export const updateLeadStatus = async (req, res) => {
   try {
-    const { status } = req.body;
+    const { status, followUpDate } = req.body;
 
     const lead = await Lead.findById(req.params.id);
 
     if (!lead) {
       return res.status(404).json({ message: "Lead not found" });
     }
-    if(!['new','contacted','converted'].includes(status)){
-      return res.status(400).json({ message: "Invalid status" });   
+
+    const hasStatusUpdate = typeof status !== "undefined";
+    const hasFollowUpDateUpdate = typeof followUpDate !== "undefined";
+
+    if (!hasStatusUpdate && !hasFollowUpDateUpdate) {
+      return res.status(400).json({ message: "No update payload provided" });
     }
 
-    lead.status = status;
+    if (hasStatusUpdate) {
+      if (!["new", "contacted", "converted"].includes(status)) {
+        return res.status(400).json({ message: "Invalid status" });
+      }
+      lead.status = status;
+    }
+
+    if (hasFollowUpDateUpdate) {
+      if (!followUpDate) {
+        return res.status(400).json({ message: "Invalid follow-up date" });
+      }
+
+      const parsedFollowUpDate = new Date(followUpDate);
+
+      if (Number.isNaN(parsedFollowUpDate.getTime())) {
+        return res.status(400).json({ message: "Invalid follow-up date" });
+      }
+
+      lead.followUpDate = parsedFollowUpDate;
+    }
     
     const updatedLead = await lead.save();
 

@@ -24,6 +24,8 @@ export default function LeadDetailPage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [updatingStatus, setUpdatingStatus] = useState("");
+  const [followUpDateInput, setFollowUpDateInput] = useState("");
+  const [updatingFollowUpDate, setUpdatingFollowUpDate] = useState(false);
   const [noteInput, setNoteInput] = useState("");
   const [addingNote, setAddingNote] = useState(false);
 
@@ -62,6 +64,11 @@ export default function LeadDetailPage() {
         }
 
         setLead(selectedLead);
+        setFollowUpDateInput(
+          selectedLead?.followUpDate
+            ? new Date(selectedLead.followUpDate).toISOString().split("T")[0]
+            : ""
+        );
         const normalizedNotes = Array.isArray(notesData) ? notesData : [];
         const sortedNotes = [...normalizedNotes].sort(
           (a, b) => new Date(b.createdAt) - new Date(a.createdAt)
@@ -172,6 +179,57 @@ export default function LeadDetailPage() {
     }
   };
 
+  const handleSetFollowUpDate = async (e) => {
+    e.preventDefault();
+
+    const token = localStorage.getItem("token");
+    const selectedDate = followUpDateInput.trim();
+
+    if (!isValidToken(token)) {
+      localStorage.removeItem("token");
+      window.location.replace("/login");
+      return;
+    }
+
+    if (!leadId || !selectedDate) {
+      return;
+    }
+
+    try {
+      setUpdatingFollowUpDate(true);
+      setError("");
+
+      const res = await fetch(`${API_URL}/leads/${leadId}/status`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token.trim()}`,
+        },
+        body: JSON.stringify({ followUpDate: selectedDate }),
+      });
+
+      const data = await res.json();
+
+      if (!res.ok) {
+        throw new Error(data?.message || "Failed to set follow-up date");
+      }
+
+      setLead((prev) => ({
+        ...prev,
+        followUpDate: data?.followUpDate || selectedDate,
+      }));
+      setFollowUpDateInput(
+        data?.followUpDate
+          ? new Date(data.followUpDate).toISOString().split("T")[0]
+          : selectedDate
+      );
+    } catch (err) {
+      setError(err.message || "Unable to set follow-up date");
+    } finally {
+      setUpdatingFollowUpDate(false);
+    }
+  };
+
   if (loading) {
     return (
       <section className="rounded-lg border border-gray-200 bg-white p-5 shadow-sm">
@@ -245,6 +303,33 @@ export default function LeadDetailPage() {
                 {updatingStatus === "converted" ? "Updating..." : "Mark Converted"}
               </button>
             </div>
+          </div>
+          <div>
+            <p className="text-sm text-gray-500">Follow-Up Date</p>
+            <p className="mt-1 rounded-md bg-amber-50 px-3 py-2 text-sm text-amber-900">
+              Next Follow-Up:{" "}
+              {lead.followUpDate
+                ? new Date(lead.followUpDate).toLocaleDateString(undefined, {
+                    dateStyle: "medium",
+                  })
+                : "No follow-up scheduled"}
+            </p>
+
+            <form onSubmit={handleSetFollowUpDate} className="mt-4 space-y-3">
+              <input
+                type="date"
+                value={followUpDateInput}
+                onChange={(e) => setFollowUpDateInput(e.target.value)}
+                className="w-full rounded-md border border-gray-300 p-2 text-sm text-gray-800 outline-none transition focus:border-gray-400"
+              />
+              <button
+                type="submit"
+                disabled={updatingFollowUpDate || !followUpDateInput}
+                className="rounded-md bg-gray-900 px-4 py-2 text-sm font-medium text-white transition hover:bg-gray-800 disabled:cursor-not-allowed disabled:opacity-60"
+              >
+                {updatingFollowUpDate ? "Setting..." : "Set Follow-Up"}
+              </button>
+            </form>
           </div>
         </div>
       </article>

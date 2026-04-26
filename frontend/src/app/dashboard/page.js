@@ -18,6 +18,25 @@ export default function Dashboard() {
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(true);
 
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+
+  const isFollowUpDue = (lead) => {
+    if (!lead?.followUpDate) {
+      return false;
+    }
+
+    const followUp = new Date(lead.followUpDate);
+    if (Number.isNaN(followUp.getTime())) {
+      return false;
+    }
+
+    followUp.setHours(0, 0, 0, 0);
+    return followUp <= today;
+  };
+
+  const leadsRequiringAttention = leads.filter(isFollowUpDue);
+
   const totalLeads = leads.length;
   const newLeads = leads.filter((lead) => lead.status === "new").length;
   const contactedLeads = leads.filter((lead) => lead.status === "contacted").length;
@@ -82,6 +101,18 @@ export default function Dashboard() {
         ))}
       </div>
 
+      {!loading && !error && leadsRequiringAttention.length > 0 && (
+        <div className="mb-8 rounded-lg border border-amber-200 bg-amber-50 p-4">
+          <h2 className="text-sm font-semibold text-amber-900">
+            Leads Requiring Attention
+          </h2>
+          <p className="mt-1 text-sm text-amber-800">
+            {leadsRequiringAttention.length} lead
+            {leadsRequiringAttention.length > 1 ? "s" : ""} have follow-up due.
+          </p>
+        </div>
+      )}
+
       <h2 className="mb-4 text-xl font-semibold text-gray-900">Leads</h2>
 
       {loading && (
@@ -105,10 +136,21 @@ export default function Dashboard() {
       <div className="space-y-4">
         {leads.map((lead) => (
           <Link key={lead._id} href={`/dashboard/${lead._id}`} className="block">
-            <article className="cursor-pointer rounded-lg border border-gray-200 bg-white p-5 shadow-sm transition hover:bg-gray-50">
+            <article
+              className={`cursor-pointer rounded-lg border p-5 shadow-sm transition hover:bg-gray-50 ${
+                isFollowUpDue(lead)
+                  ? "border-amber-300 bg-amber-50/60"
+                  : "border-gray-200 bg-white"
+              }`}
+            >
               <h3 className="text-lg font-medium text-gray-900">{lead.name}</h3>
               <p className="mt-1 text-sm text-gray-600">{lead.email}</p>
               <p className="mt-2 text-sm text-gray-700">Status: {lead.status}</p>
+              {isFollowUpDue(lead) && (
+                <span className="mt-3 inline-flex rounded-full bg-amber-100 px-2.5 py-1 text-xs font-medium text-amber-900">
+                  Follow-Up Due
+                </span>
+              )}
             </article>
           </Link>
         ))}
