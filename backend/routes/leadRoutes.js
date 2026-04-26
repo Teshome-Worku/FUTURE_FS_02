@@ -20,9 +20,6 @@ router.post("/", createLead);
 router.get("/", protect, getLeads);
 //@route put /api/leads/:id/status
 router.put("/:id/status", protect, updateLeadStatus)
-// @route POST /api/leads/:leadId/notes
-router.post("/:leadId/notes", addNote);
-// @route GET /api/leads/:leadId/notes
-router.get("/:leadId/notes", getNotesByLead);
+
 
 export default router;
