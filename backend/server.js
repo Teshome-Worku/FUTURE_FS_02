@@ -4,6 +4,7 @@ import cors from "cors";
 import connectDB from "./config/db.js";
 import leadRoutes from "./routes/leadRoutes.js";
 import noteRoutes from "./routes/noteRoutes.js";
+import authRoutes from "./routes/authRoutes.js";
 
 dotenv.config();
 
@@ -22,6 +23,8 @@ app.use("/api/leads", leadRoutes);
 //note routes
 app.use("/api/notes", noteRoutes);
 
+//auth routes
+app.use("/api/auth", authRoutes);
 // test route
 app.get("/", (req, res) => {
     res.send("API is running...");
