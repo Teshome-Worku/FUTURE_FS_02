@@ -22,7 +22,12 @@ LeadFlow CRM is designed as a **SaaS-style application** that allows admins to:
 ### ✅ Core Features
 
 * Create new leads (name, email, message, source)
-* View all leads in a structured format
+* Admin login with JWT authentication
+* View all leads in a structured dashboard
+* Lead detail page with:
+  * Status updates (`new`, `contacted`, `converted`)
+  * Follow-up date scheduling
+  * Notes timeline and note creation
 * Update lead status:
 
   * `new`
@@ -44,10 +49,17 @@ New Lead → Contacted → Converted
 
 * Node.js
 * Express.js
+* JWT authentication middleware
 
 ### Database
 
 * MongoDB (Mongoose)
+
+### Frontend
+
+* Next.js (App Router)
+* React
+* Tailwind CSS
 
 ### Tools
 
@@ -66,9 +78,18 @@ leadflow-crm/
 │   ├── controllers/   # Business logic
 │   ├── models/        # Mongoose schemas
 │   ├── routes/        # API routes
-│   ├── middleware/    # Auth & security (planned)
-│   ├── utils/         # Helper functions
+│   ├── middleware/    # Auth middleware
 │   └── server.js      # Entry point
+│
+├── frontend/
+│   ├── src/
+│   │   ├── app/                   # Next.js routes/pages
+│   │   │   ├── login/             # Login page
+│   │   │   └── dashboard/         # Dashboard + lead detail pages
+│   │   ├── components/            # Reusable UI components
+│   │   └── services/              # API helper functions
+│   ├── public/                    # Static assets
+│   └── package.json
 │
 ├── docs/
 │   └── schema.md      # Database design
@@ -84,14 +105,18 @@ leadflow-crm/
 
 ```
 git clone https://github.com/your-username/leadflow-crm.git
-cd leadflow-crm/backend
+cd leadflow-crm
 ```
 
 ---
 
-### 2. Install dependencies
+### 2. Install dependencies (backend + frontend)
 
 ```
+cd backend
+npm install
+
+cd ../frontend
 npm install
 ```
 
@@ -107,11 +132,18 @@ MONGO_URI=your_mongodb_connection_string
 JWT_SECRET=your_secret_key
 ```
 
----
-
-### 4. Run the server
+Create a `.env` file inside `/frontend`:
 
 ```
+NEXT_PUBLIC_API_URL=http://localhost:5000/api
+```
+
+---
+
+### 4. Run backend server
+
+```
+cd backend
 npm run dev
 ```
 
@@ -119,6 +151,21 @@ Server will run on:
 
 ```
 http://localhost:5000
+```
+
+---
+
+### 5. Run frontend app
+
+```
+cd frontend
+npm run dev
+```
+
+Frontend will run on:
+
+```
+http://localhost:3000
 ```
 
 ---
@@ -143,6 +190,20 @@ GET /api/leads
 PUT /api/leads/:id/status
 ```
 
+### 📝 Notes
+
+```
+GET /api/notes/:leadId
+POST /api/notes/:leadId
+```
+
+### 🔐 Auth
+
+```
+POST /api/auth/register
+POST /api/auth/login
+```
+
 ---
 
 ## 🧠 Real-World Use Case
@@ -157,8 +218,6 @@ This CRM system reflects how businesses:
 
 ## 🚧 Upcoming Features
 
-* 🔐 Admin Authentication (JWT)
-* 📝 Notes & Follow-up system
 * 🔍 Search & filtering
 * 📊 Analytics dashboard
 * 📅 Follow-up reminders
