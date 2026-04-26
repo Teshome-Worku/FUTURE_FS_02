@@ -1,8 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { API_URL } from "@/services/api";
-
+const API=process.env.NEXT_PUBLIC_API_URL;
 export default function LoginPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -10,7 +9,7 @@ export default function LoginPage() {
   const handleLogin = async (e) => {
     e.preventDefault();
 
-    const res = await fetch(`${API_URL}/auth/login`, {
+    const res = await fetch(`${API}/auth/login`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
