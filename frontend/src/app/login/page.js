@@ -17,6 +17,9 @@ export default function LoginPage() {
 
     if (!trimmedEmail || !trimmedPassword) {
       setError("Email and password are required.");
+      setTimeout(() => {
+        setError("")
+      }, 3000)
       return;
     }
 
