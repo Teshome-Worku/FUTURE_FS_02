@@ -79,15 +79,15 @@ export default function LoginPage() {
 
       {/* Login Card */}
       <div
-        className="relative w-full max-w-md animate-[fadeInScale_0.6s_ease-out_both]"
+        className="relative w-full max-w-sm animate-[fadeInScale_0.6s_ease-out_both]"
       >
-        <div className="bg-gray-900/80 backdrop-blur-xl border border-gray-800/60 rounded-2xl shadow-2xl shadow-black/40 p-8 sm:p-10">
+        <div className="bg-gray-900/80 backdrop-blur-xl border border-gray-800/60 rounded-2xl shadow-2xl shadow-black/40 p-6 sm:p-8">
           {/* Branding */}
-          <div className="text-center mb-8">
+          <div className="text-center mb-6">
             {/* Logo Icon */}
-            <div className="mx-auto w-14 h-14 bg-gradient-to-br from-blue-500 to-indigo-600 rounded-xl flex items-center justify-center mb-5 shadow-lg shadow-blue-500/20">
+            <div className="mx-auto w-11 h-11 bg-gradient-to-br from-blue-500 to-indigo-600 rounded-lg flex items-center justify-center mb-4 shadow-lg shadow-blue-500/20">
               <svg
-                className="w-7 h-7 text-white"
+                className="w-5 h-5 text-white"
                 fill="none"
                 stroke="currentColor"
                 viewBox="0 0 24 24"
@@ -100,28 +100,28 @@ export default function LoginPage() {
                 />
               </svg>
             </div>
-            <h1 className="text-2xl sm:text-3xl font-bold text-white tracking-tight">
+            <h1 className="text-xl sm:text-2xl font-bold text-white tracking-tight">
               LeadFlow CRM
             </h1>
-            <p className="text-sm text-gray-400 mt-1.5 tracking-wide">
+            <p className="text-xs text-gray-400 mt-1 tracking-wide">
               Admin Panel
             </p>
           </div>
 
           {/* Error Message */}
           {error && (
-            <div className="mb-5 px-4 py-3 bg-red-500/10 border border-red-500/20 rounded-lg animate-[fadeInScale_0.3s_ease-out_both]">
+            <div className="mb-4 px-3 py-2.5 bg-red-500/10 border border-red-500/20 rounded-lg animate-[fadeInScale_0.3s_ease-out_both]">
               <p className="text-sm text-red-400 text-center">{error}</p>
             </div>
           )}
 
           {/* Form */}
-          <form onSubmit={handleLogin} className="space-y-5">
+          <form onSubmit={handleLogin} className="space-y-4">
             {/* Email Field */}
             <div>
               <label
                 htmlFor="email"
-                className="block text-sm font-medium text-gray-300 mb-2"
+                className="block text-xs font-medium text-gray-400 mb-1.5"
               >
                 Email Address
               </label>
@@ -133,7 +133,7 @@ export default function LoginPage() {
                   id="email"
                   type="email"
                   placeholder="admin@leadflow.com"
-                  className="w-full bg-gray-800/70 border border-gray-700/50 text-white placeholder-gray-500 rounded-xl pl-11 pr-4 py-3 text-sm
+                  className="w-full bg-gray-800/70 border border-gray-700/50 text-white placeholder-gray-500 rounded-lg pl-10 pr-4 py-2.5 text-sm
                     focus:outline-none focus:ring-2 focus:ring-blue-500/40 focus:border-blue-500/50
                     transition-all duration-200"
                   value={email}
@@ -146,7 +146,7 @@ export default function LoginPage() {
             <div>
               <label
                 htmlFor="password"
-                className="block text-sm font-medium text-gray-300 mb-2"
+                className="block text-xs font-medium text-gray-400 mb-1.5"
               >
                 Password
               </label>
@@ -158,7 +158,7 @@ export default function LoginPage() {
                   id="password"
                   type={showPassword ? "text" : "password"}
                   placeholder="••••••••"
-                  className="w-full bg-gray-800/70 border border-gray-700/50 text-white placeholder-gray-500 rounded-xl pl-11 pr-12 py-3 text-sm
+                  className="w-full bg-gray-800/70 border border-gray-700/50 text-white placeholder-gray-500 rounded-lg pl-10 pr-12 py-2.5 text-sm
                     focus:outline-none focus:ring-2 focus:ring-blue-500/40 focus:border-blue-500/50
                     transition-all duration-200"
                   value={password}
@@ -184,19 +184,19 @@ export default function LoginPage() {
               type="submit"
               disabled={loading}
               className="w-full bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-500 hover:to-blue-600
-                text-white font-semibold py-3 px-4 rounded-xl text-sm
+                text-white font-semibold py-2.5 px-4 rounded-lg text-sm
                 shadow-lg shadow-blue-600/20 hover:shadow-blue-500/30
                 focus:outline-none focus:ring-2 focus:ring-blue-500/40 focus:ring-offset-2 focus:ring-offset-gray-900
                 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:from-blue-600 disabled:hover:to-blue-700
                 transition-all duration-200 transform hover:-translate-y-0.5 active:translate-y-0
-                cursor-pointer mt-2"
+                cursor-pointer mt-1"
             >
               {loading ? <LoadingIndicator /> : "Sign In"}
             </button>
           </form>
 
           {/* Footer */}
-          <p className="text-center text-xs text-gray-600 mt-8">
+          <p className="text-center text-xs text-gray-600 mt-6">
             © {new Date().getFullYear()} LeadFlow CRM. All rights reserved.
           </p>
         </div>
