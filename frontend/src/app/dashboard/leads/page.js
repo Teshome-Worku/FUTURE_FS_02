@@ -170,8 +170,8 @@ export default function LeadsPage() {
 
                     {/* Email */}
                     <td className="whitespace-nowrap px-5 py-4">
-                      <span className="text-xs text-gray-500" 
-                      href={`maito:${lead.email}`}>
+                      <span className="cursor-pointer hover:text-blue-500 text-xs text-gray-500 " 
+                      href={`mailto:${lead.email}`}>
                         {lead.email || "—"}
                       </span>
                     </td>
