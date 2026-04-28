@@ -54,3 +54,28 @@ export const deleteLead = async (id, token) => {
         throw new Error((data && data.message) || "Failed to delete lead");
     }
 };
+
+export const createLead = async (leadData, token) => {
+    if (!isValidToken(token)) {
+        throw new Error("No auth token found. Please login again.");
+    }
+
+    const normalizedToken = token.trim();
+
+    const res = await fetch(`${API_URL}/leads`, {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${normalizedToken}`,
+        },
+        body: JSON.stringify(leadData),
+    });
+
+    const data = await res.json();
+
+    if (!res.ok) {
+        throw new Error((data && data.message) || "Failed to create lead");
+    }
+
+    return data;
+};

@@ -134,10 +134,10 @@ export default function Dashboard() {
       subTitle: "Overview of all leads",
       actionButton: {
         label: "＋ Add Lead",
-        onClick: () => router.push("/dashboard/add-lead"),
+        onClick: () => router.push("/dashboard/new-lead"),
       },
     });
-  }, [setHeader]);
+  }, [setHeader, router]);
 
   // ── Fetch leads ─────────────────────────────────────────────────────────────
 

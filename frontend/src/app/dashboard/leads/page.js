@@ -177,69 +177,70 @@ export default function LeadsPage() {
       {/* ── Table / Filtered Results ── */}
       {!loading && !error && leads.length > 0 && (
         <div className="overflow-x-auto rounded-xl bg-white shadow-sm ring-1 ring-gray-200">
-          <table className="min-w-full divide-y divide-gray-100">
+          <div className="min-w-[900px]">
+            <table className="w-full divide-y divide-gray-100">
 
-            {/* ── Head ── */}
-            <thead>
-              <tr className="bg-gray-50">
-                {["Name", "Email", "Message", "Status", "Follow-Up", "Actions"].map((col) => (
-                  <th
-                    key={col}
-                    scope="col"
-                    className="px-5 py-3 text-left text-xs font-semibold uppercase tracking-wide text-gray-400"
-                  >
-                    {col}
-                  </th>
-                ))}
-              </tr>
-            </thead>
-
-            {/* ── Body ── */}
-            <tbody className="divide-y divide-gray-100">
-              {filtered.length === 0 ? (
-                <tr>
-                  <td
-                    colSpan={6}
-                    className="px-5 py-12 text-center text-sm text-gray-500"
-                  >
-                    <div className="flex flex-col items-center gap-2">
-                      <FiSearch className="h-6 w-6 text-gray-300" />
-                      <p>No leads found matching your criteria.</p>
-                      <button 
-                        onClick={() => { setSearch(""); setSelectedStatus("All"); }}
-                        className="text-blue-600 hover:underline text-xs"
-                      >
-                        Reset filters
-                      </button>
-                    </div>
-                  </td>
+              {/* ── Head ── */}
+              <thead>
+                <tr className="bg-gray-50">
+                  {["Name", "Email", "Message", "Status", "Follow-Up", "Actions"].map((col) => (
+                    <th
+                      key={col}
+                      scope="col"
+                      className="px-5 py-3 text-left text-xs font-semibold uppercase tracking-wide text-gray-400 whitespace-nowrap"
+                    >
+                      {col}
+                    </th>
+                  ))}
                 </tr>
-              ) : (
-                filtered.map((lead) => (
-                  <tr
-                    key={lead._id}
-                    className="transition hover:bg-gray-50"
-                  >
-                    {/* Name */}
-                    <td className="whitespace-nowrap px-5 py-4">
-                      <span className="text-sm font-semibold text-gray-900">
-                        {lead.name || "—"}
-                      </span>
-                    </td>
+              </thead>
 
-                    {/* Email */}
-                    <td className="whitespace-nowrap px-5 py-4">
-                      <span className="cursor-pointer hover:text-blue-500 text-xs text-gray-500 transition-colors">
-                        {lead.email || "—"}
-                      </span>
+              {/* ── Body ── */}
+              <tbody className="divide-y divide-gray-100">
+                {filtered.length === 0 ? (
+                  <tr>
+                    <td
+                      colSpan={6}
+                      className="px-5 py-12 text-center text-sm text-gray-500"
+                    >
+                      <div className="flex flex-col items-center gap-2">
+                        <FiSearch className="h-6 w-6 text-gray-300" />
+                        <p>No leads found matching your criteria.</p>
+                        <button 
+                          onClick={() => { setSearch(""); setSelectedStatus("All"); }}
+                          className="text-blue-600 hover:underline text-xs"
+                        >
+                          Reset filters
+                        </button>
+                      </div>
                     </td>
+                  </tr>
+                ) : (
+                  filtered.map((lead) => (
+                    <tr
+                      key={lead._id}
+                      className="transition hover:bg-gray-50"
+                    >
+                      {/* Name */}
+                      <td className="whitespace-nowrap px-5 py-4">
+                        <span className="text-sm font-semibold text-gray-900">
+                          {lead.name || "—"}
+                        </span>
+                      </td>
 
-                    {/* Message (truncated) */}
-                    <td className="px-5 py-4">
-                      <span className="block max-w-[220px] truncate text-xs text-gray-500">
-                        {lead.message || "—"}
-                      </span>
-                    </td>
+                      {/* Email */}
+                      <td className="whitespace-nowrap px-5 py-4">
+                        <span className="cursor-pointer hover:text-blue-500 text-xs text-gray-500 transition-colors">
+                          {lead.email || "—"}
+                        </span>
+                      </td>
+
+                      {/* Message (truncated) */}
+                      <td className="px-5 py-4 max-w-[200px]">
+                        <span className="block truncate text-xs text-gray-500 overflow-hidden text-ellipsis whitespace-nowrap">
+                          {lead.message || "—"}
+                        </span>
+                      </td>
 
                     {/* Status badge */}
                     <td className="whitespace-nowrap px-5 py-4">
@@ -303,8 +304,9 @@ export default function LeadsPage() {
 
           </table>
         </div>
-      )}
+      </div>
+    )}
 
-    </section>
+  </section>
   );
 }

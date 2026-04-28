@@ -11,7 +11,7 @@ export default function DashboardLayout({ children }) {
         <Sidebar />
 
         {/* ── Main content area (offset by sidebar width) ── */}
-        <div className="ml-64 flex flex-1 flex-col">
+        <div className="ml-64 flex flex-1 flex-col overflow-x-hidden">
 
           {/* Sticky header — stays at top while content scrolls */}
           <Header />
