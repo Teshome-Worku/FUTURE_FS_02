@@ -34,3 +34,23 @@ export const getLeads = async (token) => {
 
     return data;
 };
+
+export const deleteLead = async (id, token) => {
+    if (!isValidToken(token)) {
+        throw new Error("No auth token found. Please login again.");
+    }
+
+    const normalizedToken = token.trim();
+
+    const res = await fetch(`${API_URL}/leads/${id}`, {
+        method: "DELETE",
+        headers: {
+            Authorization: `Bearer ${normalizedToken}`,
+        },
+    });
+
+    if (!res.ok) {
+        const data = await res.json().catch(() => ({}));
+        throw new Error((data && data.message) || "Failed to delete lead");
+    }
+};

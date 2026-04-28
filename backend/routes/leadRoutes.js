@@ -5,12 +5,10 @@ import {
 import {
     createLead,
     getLeads,
-    updateLeadStatus
+    updateLeadStatus,
+    deleteLead
 } from "../controllers/leadController.js";
-import {
-    addNote,
-    getNotesByLead
-} from "../controllers/noteController.js";
+
 
 const router = express.Router();
 
@@ -20,6 +18,10 @@ router.post("/", createLead);
 router.get("/", protect, getLeads);
 //@route put /api/leads/:id/status
 router.put("/:id/status", protect, updateLeadStatus)
+// @desc Delete a lead
+// @route DELETE /api/leads/:id
+// @access Private
+router.delete("/:id", protect, deleteLead);
 
 
 export default router;

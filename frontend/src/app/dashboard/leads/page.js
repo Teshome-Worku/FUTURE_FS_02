@@ -2,10 +2,10 @@
 
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import { useHeader } from "@/context/HeaderContext";
-import { getLeads } from "@/services/api";
-import { FiLoader, FiInbox } from "react-icons/fi";
 import Link from "next/link";
+import { useHeader } from "@/context/HeaderContext";
+import { getLeads, deleteLead } from "@/services/api";
+import { FiLoader, FiInbox, FiEye, FiTrash2 } from "react-icons/fi";
 
 // ─── Token guard ──────────────────────────────────────────────────────────────
 
@@ -26,13 +26,33 @@ const STATUS_BADGE = {
 // ─── Leads Page ───────────────────────────────────────────────────────────────
 
 export default function LeadsPage() {
-  const [leads, setLeads]     = useState([]);
-  const [error, setError]     = useState("");
-  const [loading, setLoading] = useState(true);
-  const [search, setSearch]   = useState("");
+  const [leads, setLeads]       = useState([]);
+  const [error, setError]       = useState("");
+  const [loading, setLoading]   = useState(true);
+  const [search, setSearch]     = useState("");
+  const [deletingId, setDeletingId] = useState(null);
 
-  const router      = useRouter();
+  const router        = useRouter();
   const { setHeader } = useHeader();
+
+  // ── Delete handler ──────────────────────────────────────────────────────────
+
+  const handleDelete = async (id) => {
+    if (!window.confirm("Delete this lead? This action cannot be undone.")) return;
+
+    const token = localStorage.getItem("token");
+    setDeletingId(id);
+
+    try {
+      await deleteLead(id, token);
+      // Optimistic removal — no page reload
+      setLeads((prev) => prev.filter((l) => l._id !== id));
+    } catch (err) {
+      alert(err.message || "Failed to delete lead");
+    } finally {
+      setDeletingId(null);
+    }
+  };
 
   // ── Configure global Header ─────────────────────────────────────────────────
 
@@ -209,21 +229,34 @@ export default function LeadsPage() {
 
                     {/* Actions */}
                     <td className="whitespace-nowrap px-5 py-4">
-                      <Link
-                        href={`/dashboard/${lead._id}`}
-                        className="rounded-lg border border-gray-200 px-3 py-1.5 text-xs font-medium text-gray-600 transition hover:border-gray-400 hover:text-gray-900"
-                      >
-                        View
-                      </Link>
+                      <div className="flex items-center gap-2">
+
+                        {/* View */}
+                        <Link
+                          href={`/dashboard/${lead._id}`}
+                          title="View lead"
+                          className="inline-flex items-center justify-center rounded-lg p-2 text-gray-400 transition hover:bg-gray-100 hover:text-gray-700"
+                        >
+                          <FiEye className="h-4 w-4" />
+                        </Link>
+
+                        {/* Delete */}
+                        <button
+                          type="button"
+                          title="Delete lead"
+                          disabled={deletingId === lead._id}
+                          onClick={() => handleDelete(lead._id)}
+                          className="cursor-pointer inline-flex items-center justify-center rounded-lg p-2 text-gray-400 transition hover:bg-red-50 hover:text-red-500 disabled:opacity-40"
+                        >
+                          {deletingId === lead._id ? (
+                            <FiLoader className="h-4 w-4 animate-spin" />
+                          ) : (
+                            <FiTrash2 className="h-4 w-4" />
+                          )}
+                        </button>
+
+                      </div>
                     </td>
-                    {/* <td className="whitespace-nowrap px-5 py-4">
-                      <Link
-                        href={`/dashboard/leads/${lead._id}`}
-                        className="rounded-lg border border-gray-200 px-3 py-1.5 text-xs font-medium text-gray-600 transition hover:border-gray-400 hover:text-gray-900"
-                      >
-                        Edit
-                      </Link>
-                    </td> */}
 
                   </tr>
                 ))

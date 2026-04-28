@@ -78,3 +78,19 @@ export const updateLeadStatus = async (req, res) => {
     res.status(500).json({ message: error.message });
   }
 };
+// @desc Delete a lead
+export const deleteLead = async (req, res) => {
+  try {
+    const lead = await Lead.findById(req.params.id);
+
+    if (!lead) {
+      return res.status(404).json({ message: "Lead not found" });
+    }
+
+    await lead.deleteOne();
+
+    res.json({ message: "Lead removed" });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
