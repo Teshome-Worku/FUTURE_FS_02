@@ -233,7 +233,7 @@ export default function LeadsPage() {
 
                         {/* View */}
                         <Link
-                          href={`/dashboard/${lead._id}`}
+                          href={`/dashboard/leads/${lead._id}`}
                           title="View lead"
                           className="inline-flex items-center justify-center rounded-lg p-2 text-gray-400 transition hover:bg-gray-100 hover:text-gray-700"
                         >

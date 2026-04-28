@@ -337,7 +337,7 @@ export default function Dashboard() {
                   className={idx < arr.length - 1 ? "border-b border-gray-100" : ""}
                 >
                   <Link
-                    href={`/dashboard/${lead._id}`}
+                    href={`/dashboard/leads/${lead._id}`}
                     className="flex items-center justify-between px-5 py-4 transition hover:bg-gray-50"
                   >
                     {/* Lead info */}

@@ -259,7 +259,7 @@ export default function LeadDetailPage() {
       <div className="flex items-center justify-between">
         <h1 className="text-2xl font-semibold text-gray-900">Lead Detail</h1>
         <Link
-          href="/dashboard"
+          href="/dashboard/leads/"
           className="rounded-md border border-gray-300 bg-white px-3 py-2 text-sm text-gray-700 transition hover:bg-gray-50"
         >
           Back to Leads
