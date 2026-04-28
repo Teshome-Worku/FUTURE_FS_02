@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { getLeads } from "@/services/api";
+import { useHeader } from "@/context/HeaderContext";
 
 const isValidToken = (token) => {
   if (typeof token !== "string") {
@@ -17,6 +18,7 @@ export default function Dashboard() {
   const [leads, setLeads] = useState([]);
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(true);
+  const { setHeader } = useHeader();
 
   const today = new Date();
   today.setHours(0, 0, 0, 0);
@@ -48,6 +50,11 @@ export default function Dashboard() {
     { title: "Contacted Leads", value: contactedLeads, icon: "CT" },
     { title: "Converted Leads", value: convertedLeads, icon: "CV" },
   ];
+
+  // Configure the global Header for this page
+  useEffect(() => {
+    setHeader({ title: "Dashboard", showSearch: false, actionButton: null });
+  }, [setHeader]);
 
   useEffect(() => {
     const fetchLeads = async () => {
@@ -81,8 +88,6 @@ export default function Dashboard() {
 
   return (
     <section>
-      <h1 className="mb-2 text-2xl font-semibold text-gray-900">Overview</h1>
-      <p className="mb-6 text-sm text-gray-600">Lead performance snapshot</p>
 
       <div className="mb-8 grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
         {summaryCards.map((card) => (
