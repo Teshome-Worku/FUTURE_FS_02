@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { getLeads } from "@/services/api";
 import { useHeader } from "@/context/HeaderContext";
@@ -49,6 +50,7 @@ export default function Dashboard() {
   const [error, setError]     = useState("");
   const [loading, setLoading] = useState(true);
   const { setHeader }         = useHeader();
+  const router                = useRouter();
 
   // ── Derived stats ───────────────────────────────────────────────────────────
 
@@ -129,10 +131,10 @@ export default function Dashboard() {
   useEffect(() => {
     setHeader({
       title: "Dashboard",
-      showSearch: false,
+      subTitle: "Overview of all leads",
       actionButton: {
         label: "＋ Add Lead",
-        onClick: () => console.log("Add Lead clicked"),
+        onClick: () => router.push("/dashboard/add-lead"),
       },
     });
   }, [setHeader]);

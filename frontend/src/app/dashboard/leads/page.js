@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { useHeader } from "@/context/HeaderContext";
 import { getLeads, deleteLead } from "@/services/api";
-import { FiLoader, FiInbox, FiEye, FiTrash2 } from "react-icons/fi";
+import { FiLoader, FiInbox, FiEye, FiTrash2, FiSearch } from "react-icons/fi";
 
 // ─── Token guard ──────────────────────────────────────────────────────────────
 
@@ -26,10 +26,11 @@ const STATUS_BADGE = {
 // ─── Leads Page ───────────────────────────────────────────────────────────────
 
 export default function LeadsPage() {
-  const [leads, setLeads]       = useState([]);
-  const [error, setError]       = useState("");
-  const [loading, setLoading]   = useState(true);
-  const [search, setSearch]     = useState("");
+  const [leads, setLeads]           = useState([]);
+  const [error, setError]           = useState("");
+  const [loading, setLoading]       = useState(true);
+  const [search, setSearch]         = useState("");
+  const [selectedStatus, setSelectedStatus] = useState("All");
   const [deletingId, setDeletingId] = useState(null);
 
   const router        = useRouter();
@@ -45,7 +46,6 @@ export default function LeadsPage() {
 
     try {
       await deleteLead(id, token);
-      // Optimistic removal — no page reload
       setLeads((prev) => prev.filter((l) => l._id !== id));
     } catch (err) {
       alert(err.message || "Failed to delete lead");
@@ -59,7 +59,7 @@ export default function LeadsPage() {
   useEffect(() => {
     setHeader({
       title: "Leads",
-      showSearch: true,
+      subTitle: "Manage and track your incoming business inquiries",
       actionButton: {
         label: "+ Add Lead",
         onClick: () => router.push("/dashboard/new-lead"),
@@ -97,15 +97,19 @@ export default function LeadsPage() {
     fetchLeads();
   }, []);
 
-  // ── Client-side search filter ───────────────────────────────────────────────
+  // ── Combined Search and Status filtering ────────────────────────────────────
 
   const filtered = leads.filter((lead) => {
-    const q = search.toLowerCase();
-    return (
-      lead.name?.toLowerCase().includes(q) ||
-      lead.email?.toLowerCase().includes(q) ||
-      lead.status?.toLowerCase().includes(q)
-    );
+    const query = search.toLowerCase();
+    const matchesSearch = 
+      lead.name?.toLowerCase().includes(query) ||
+      lead.email?.toLowerCase().includes(query);
+    
+    const matchesStatus = 
+      selectedStatus === "All" || 
+      lead.status?.toLowerCase() === selectedStatus.toLowerCase();
+
+    return matchesSearch && matchesStatus;
   });
 
   // ── Render ──────────────────────────────────────────────────────────────────
@@ -113,9 +117,35 @@ export default function LeadsPage() {
   return (
     <section className="space-y-5 mt-1">
 
-      {/* ── Filters placeholder ── */}
-      <div className="rounded-lg border border-dashed border-gray-200 bg-white px-4 py-2.5 text-xs text-gray-400">
-        Filters coming soon
+      {/* ── Filter Bar ── */}
+      <div className="flex flex-col md:flex-row justify-between items-center gap-4 mb-4">
+        
+        {/* Search Input */}
+        <div className="relative w-full max-w-sm">
+          <FiSearch className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-400" />
+          <input
+            type="text"
+            placeholder="Search leads..."
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+            className="w-full rounded-lg border border-gray-200 bg-white py-2 pl-9 pr-4 text-sm text-gray-700 outline-none transition focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20"
+          />
+        </div>
+
+        {/* Status Filter Dropdown */}
+        <div className="flex items-center gap-2 w-full md:w-auto">
+          <span className="text-sm text-gray-500 hidden md:inline">Status:</span>
+          <select
+            value={selectedStatus}
+            onChange={(e) => setSelectedStatus(e.target.value)}
+            className="w-full md:w-auto rounded-lg border border-gray-200 bg-white px-3 py-2 text-sm text-gray-700 outline-none transition focus:border-blue-500"
+          >
+            <option value="All">All Statuses</option>
+            <option value="new">New</option>
+            <option value="contacted">Contacted</option>
+            <option value="converted">Converted</option>
+          </select>
+        </div>
       </div>
 
       {/* ── Loading ── */}
@@ -133,7 +163,7 @@ export default function LeadsPage() {
         </div>
       )}
 
-      {/* ── Empty ── */}
+      {/* ── Empty State (No Leads At All) ── */}
       {!loading && !error && leads.length === 0 && (
         <div className="flex flex-col items-center justify-center gap-3 rounded-xl border border-gray-200 bg-white py-16 text-center">
           <FiInbox className="h-10 w-10 text-gray-300" />
@@ -144,7 +174,7 @@ export default function LeadsPage() {
         </div>
       )}
 
-      {/* ── Table ── */}
+      {/* ── Table / Filtered Results ── */}
       {!loading && !error && leads.length > 0 && (
         <div className="overflow-x-auto rounded-xl bg-white shadow-sm ring-1 ring-gray-200">
           <table className="min-w-full divide-y divide-gray-100">
@@ -170,9 +200,18 @@ export default function LeadsPage() {
                 <tr>
                   <td
                     colSpan={6}
-                    className="px-5 py-8 text-center text-sm text-gray-400"
+                    className="px-5 py-12 text-center text-sm text-gray-500"
                   >
-                    No leads match your search.
+                    <div className="flex flex-col items-center gap-2">
+                      <FiSearch className="h-6 w-6 text-gray-300" />
+                      <p>No leads found matching your criteria.</p>
+                      <button 
+                        onClick={() => { setSearch(""); setSelectedStatus("All"); }}
+                        className="text-blue-600 hover:underline text-xs"
+                      >
+                        Reset filters
+                      </button>
+                    </div>
                   </td>
                 </tr>
               ) : (
@@ -190,8 +229,7 @@ export default function LeadsPage() {
 
                     {/* Email */}
                     <td className="whitespace-nowrap px-5 py-4">
-                      <span className="cursor-pointer hover:text-blue-500 text-xs text-gray-500 " 
-                      href={`mailto:${lead.email}`}>
+                      <span className="cursor-pointer hover:text-blue-500 text-xs text-gray-500 transition-colors">
                         {lead.email || "—"}
                       </span>
                     </td>
