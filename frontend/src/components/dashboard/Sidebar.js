@@ -6,48 +6,33 @@ import {
   FiHome,
   FiUsers,
   FiUserPlus,
-  FiList,
   FiSettings,
   FiLogOut,
 } from "react-icons/fi";
 
-// ─── Nav Section Definitions ────────────────────────────────────────────────
+// ─── Navigation config ────────────────────────────────────────────────────────
 
-const sections = [
-  {
-    label: "Main",
-    items: [
-      { label: "Dashboard", href: "/dashboard", icon: FiHome },
-      { label: "Leads",     href: "/dashboard/leads", icon: FiUsers },
-    ],
-  },
-  {
-    label: "Leads",
-    items: [
-      { label: "All Leads", href: "/dashboard/leads", icon: FiList },
-      { label: "New Leads", href: "/dashboard/leads", icon: FiUserPlus },
-    ],
-  },
-  {
-    label: "System",
-    items: [
-      { label: "Settings", href: "#", icon: FiSettings },
-    ],
-  },
+const mainNav = [
+  { label: "Dashboard", href: "/dashboard",          icon: FiHome },
+  { label: "Leads",     href: "/dashboard/leads",    icon: FiUsers },
+  { label: "Add Lead",  href: "/dashboard/new-lead", icon: FiUserPlus },
 ];
 
-// ─── NavItem ─────────────────────────────────────────────────────────────────
+const bottomNav = [
+  { label: "Settings", href: "#", icon: FiSettings },
+];
+
+// ─── NavItem ──────────────────────────────────────────────────────────────────
 
 function NavItem({ item, isActive }) {
   const Icon = item.icon;
-  const base =
-    "flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium transition-all duration-150";
-  const active = "bg-gray-800 text-white";
-  const idle   = "text-gray-400 hover:bg-gray-800/60 hover:text-white";
+  const base    = "flex items-center gap-3 rounded-md px-3 py-2 text-sm font-medium transition-all duration-150";
+  const active  = "bg-gray-800 text-white";
+  const inactive = "text-gray-300 hover:bg-gray-800 hover:text-white";
 
   return (
     <li>
-      <Link href={item.href} className={`${base} ${isActive ? active : idle}`}>
+      <Link href={item.href} className={`${base} ${isActive ? active : inactive}`}>
         <Icon className="h-4 w-4 flex-shrink-0" />
         <span>{item.label}</span>
       </Link>
@@ -55,10 +40,14 @@ function NavItem({ item, isActive }) {
   );
 }
 
-// ─── Sidebar ─────────────────────────────────────────────────────────────────
+// ─── Sidebar ──────────────────────────────────────────────────────────────────
 
 export default function Sidebar() {
   const pathname = usePathname();
+
+  // Exact match for /dashboard, prefix match for everything else
+  const isActive = (href) =>
+    href === "/dashboard" ? pathname === href : pathname.startsWith(href);
 
   return (
     <aside className="fixed inset-y-0 left-0 z-30 flex w-64 flex-col bg-gray-900 text-white">
@@ -73,59 +62,51 @@ export default function Sidebar() {
         </span>
       </div>
 
-      {/* ── Navigation ── */}
-      <nav className="flex-1 overflow-y-auto px-3 py-4">
-        {sections.map((section, sIdx) => (
-          <div key={section.label} className={sIdx > 0 ? "mt-6" : ""}>
-            {/* Section label */}
-            <p className="mb-2 px-3 text-[10px] font-semibold uppercase tracking-widest text-gray-500">
-              {section.label}
-            </p>
-
-            {/* Items */}
-            <ul className="space-y-1">
-              {section.items.map((item) => (
-                <NavItem
-                  key={`${section.label}-${item.label}`}
-                  item={item}
-                  isActive={pathname === item.href}
-                />
-              ))}
-            </ul>
-
-            {/* Subtle divider after each section except last */}
-            {sIdx < sections.length - 1 && (
-              <div className="mt-6 border-t border-gray-800" />
-            )}
-          </div>
-        ))}
-
-        {/* ── Logout (UI only) ── */}
-        <div className="mt-6 border-t border-gray-800 pt-4">
-          <button
-            type="button"
-            className="flex w-full items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium text-gray-400 transition-all duration-150 hover:bg-red-500/10 hover:text-red-400"
-          >
-            <FiLogOut className="h-4 w-4 flex-shrink-0" />
-            <span>Logout</span>
-          </button>
-        </div>
+      {/* ── Main nav ── */}
+      <nav className="flex-1 overflow-y-auto px-4 py-6">
+        <ul className="space-y-2">
+          {mainNav.map((item) => (
+            <NavItem
+              key={item.href}
+              item={item}
+              isActive={isActive(item.href)}
+            />
+          ))}
+        </ul>
       </nav>
 
-      {/* ── User Profile Card ── */}
-      <div className="border-t border-gray-800 p-3">
-        <div className="flex items-center gap-3 rounded-lg bg-gray-800 px-3 py-3">
-          {/* Avatar placeholder */}
+      {/* ── Bottom: Settings + Logout + Profile ── */}
+      <div className="border-t border-gray-800 px-4 py-3 space-y-1">
+
+        {/* Settings */}
+        {bottomNav.map((item) => (
+          <NavItem
+            key={item.label}
+            item={item}
+            isActive={isActive(item.href)}
+          />
+        ))}
+
+        {/* Logout — UI only */}
+        <button
+          type="button"
+          className="flex w-full items-center gap-3 rounded-md px-3 py-2 text-sm font-medium text-gray-300 transition-all duration-150 hover:bg-red-500/10 hover:text-red-400"
+        >
+          <FiLogOut className="h-4 w-4 flex-shrink-0" />
+          <span>Logout</span>
+        </button>
+
+        {/* Profile card */}
+        <div className="mt-2 flex items-center gap-3 rounded-lg bg-gray-800 px-3 py-3">
           <div className="flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-full bg-indigo-600 text-xs font-bold text-white">
             JD
           </div>
           <div className="min-w-0">
             <p className="truncate text-sm font-medium text-white">John Doe</p>
-            <p className="truncate text-[11px] text-gray-400">
-              john@leadflow.io
-            </p>
+            <p className="truncate text-[11px] text-gray-400">john@leadflow.io</p>
           </div>
         </div>
+
       </div>
 
     </aside>
