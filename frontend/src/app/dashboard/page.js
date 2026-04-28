@@ -12,6 +12,19 @@ import {
   FiAlertCircle,
   FiLoader,
 } from "react-icons/fi";
+import {
+  BarChart,
+  Bar,
+  XAxis,
+  YAxis,
+  Tooltip,
+  ResponsiveContainer,
+  CartesianGrid,
+  PieChart,
+  Pie,
+  Cell,
+  Legend,
+} from "recharts";
 
 // ─── Token guard ──────────────────────────────────────────────────────────────
 
@@ -55,6 +68,32 @@ export default function Dashboard() {
   const newLeads       = leads.filter((l) => l.status === "new").length;
   const contactedLeads = leads.filter((l) => l.status === "contacted").length;
   const convertedLeads = leads.filter((l) => l.status === "converted").length;
+
+  // ── Chart data ──────────────────────────────────────────────────────────────
+
+  // Bar chart: group leads by date (YYYY-MM-DD), count per day
+  const barData = Object.entries(
+    leads.reduce((acc, lead) => {
+      const date = lead.createdAt
+        ? new Date(lead.createdAt).toLocaleDateString("en-US", {
+            month: "short",
+            day:   "numeric",
+          })
+        : "Unknown";
+      acc[date] = (acc[date] || 0) + 1;
+      return acc;
+    }, {})
+  )
+    .map(([date, count]) => ({ date, count }))
+    .slice(-7); // last 7 distinct dates
+
+  // Pie chart: status distribution
+  const PIE_COLORS = ["#6366f1", "#3b82f6", "#22c55e"];
+  const pieData = [
+    { name: "New",       value: newLeads },
+    { name: "Contacted", value: contactedLeads },
+    { name: "Converted", value: convertedLeads },
+  ].filter((d) => d.value > 0);
 
   // ── Stat card definitions ───────────────────────────────────────────────────
 
@@ -156,6 +195,82 @@ export default function Dashboard() {
           );
         })}
       </div>
+
+      {/* ── Insights: Bar + Pie Charts ── */}
+      {!loading && !error && leads.length > 0 && (
+        <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
+
+          {/* Bar chart — Leads Over Time */}
+          <div className="rounded-xl bg-white p-5 shadow-sm ring-1 ring-gray-200">
+            <h2 className="mb-4 text-sm font-semibold text-gray-700">Leads Overview</h2>
+            <ResponsiveContainer width="100%" height={220}>
+              <BarChart data={barData} margin={{ top: 0, right: 8, left: -16, bottom: 0 }}>
+                <CartesianGrid strokeDasharray="3 3" stroke="#f3f4f6" />
+                <XAxis
+                  dataKey="date"
+                  tick={{ fontSize: 11, fill: "#9ca3af" }}
+                  axisLine={false}
+                  tickLine={false}
+                />
+                <YAxis
+                  allowDecimals={false}
+                  tick={{ fontSize: 11, fill: "#9ca3af" }}
+                  axisLine={false}
+                  tickLine={false}
+                />
+                <Tooltip
+                  contentStyle={{
+                    borderRadius: "8px",
+                    border: "none",
+                    boxShadow: "0 4px 12px rgba(0,0,0,0.08)",
+                    fontSize: "12px",
+                  }}
+                />
+                <Bar dataKey="count" fill="#6366f1" radius={[4, 4, 0, 0]} />
+              </BarChart>
+            </ResponsiveContainer>
+          </div>
+
+          {/* Pie chart — Status Distribution */}
+          <div className="rounded-xl bg-white p-5 shadow-sm ring-1 ring-gray-200">
+            <h2 className="mb-4 text-sm font-semibold text-gray-700">Lead Status Distribution</h2>
+            <ResponsiveContainer width="100%" height={220}>
+              <PieChart>
+                <Pie
+                  data={pieData}
+                  cx="50%"
+                  cy="50%"
+                  innerRadius={55}
+                  outerRadius={85}
+                  paddingAngle={3}
+                  dataKey="value"
+                >
+                  {pieData.map((entry, index) => (
+                    <Cell
+                      key={`cell-${index}`}
+                      fill={PIE_COLORS[index % PIE_COLORS.length]}
+                    />
+                  ))}
+                </Pie>
+                <Tooltip
+                  contentStyle={{
+                    borderRadius: "8px",
+                    border: "none",
+                    boxShadow: "0 4px 12px rgba(0,0,0,0.08)",
+                    fontSize: "12px",
+                  }}
+                />
+                <Legend
+                  iconType="circle"
+                  iconSize={8}
+                  wrapperStyle={{ fontSize: "12px", paddingTop: "12px" }}
+                />
+              </PieChart>
+            </ResponsiveContainer>
+          </div>
+
+        </div>
+      )}
 
       {/* ── Follow-Up Alert Banner ── */}
       {!loading && !error && leadsRequiringAttention.length > 0 && (
