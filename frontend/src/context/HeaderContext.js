@@ -11,7 +11,6 @@ const HeaderContext = createContext(null);
 const DEFAULT_STATE = {
   title: "",
   subTitle: "",
-  showSearch: false,
   actionButton: null, // { label: string, onClick: function }
 };
 
