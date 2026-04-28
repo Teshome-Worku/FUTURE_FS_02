@@ -19,7 +19,7 @@ const mainNav = [
 ];
 
 const bottomNav = [
-  { label: "Settings", href: "#", icon: FiSettings },
+  { label: "Settings", href: "/dashboard/settings", icon: FiSettings },
 ];
 
 //logout
