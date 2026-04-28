@@ -1,36 +1,69 @@
 "use client";
 
-import Link from "next/link";
-import { useParams } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
+import { useHeader } from "@/context/HeaderContext";
 import { getLeads } from "@/services/api";
+import { 
+  FiUser, 
+  FiMail, 
+  FiGlobe, 
+  FiMessageSquare, 
+  FiActivity, 
+  FiCalendar, 
+  FiPlus, 
+  FiLoader,
+  FiAlertCircle
+} from "react-icons/fi";
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
 const isValidToken = (token) => {
-  if (typeof token !== "string") {
-    return false;
-  }
-
+  if (typeof token !== "string") return false;
   const normalized = token.trim();
   return normalized !== "" && normalized !== "undefined" && normalized !== "null";
 };
 
+// ─── Status badge styling ─────────────────────────────────────────────────────
+
+const STATUS_CONFIG = {
+  new:       { label: "New",       color: "bg-gray-100 text-gray-600 border-gray-200" },
+  contacted: { label: "Contacted", color: "bg-blue-50 text-blue-700 border-blue-100" },
+  converted: { label: "Converted", color: "bg-green-50 text-green-700 border-green-100" },
+};
+
 export default function LeadDetailPage() {
   const params = useParams();
+  const router = useRouter();
   const leadId = params?.id;
+  const { setHeader } = useHeader();
+
   const [lead, setLead] = useState(null);
   const [notes, setNotes] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
-  const [updatingStatus, setUpdatingStatus] = useState("");
+  
+  const [updatingStatus, setUpdatingStatus] = useState(false);
   const [followUpDateInput, setFollowUpDateInput] = useState("");
   const [updatingFollowUpDate, setUpdatingFollowUpDate] = useState(false);
   const [noteInput, setNoteInput] = useState("");
   const [addingNote, setAddingNote] = useState(false);
 
+  // ── Configure global Header ─────────────────────────────────────────────────
   useEffect(() => {
-    const fetchLead = async () => {
+    setHeader({
+      title: "Lead Details",
+      subTitle: "View and manage complete information for this lead",
+      actionButton: {
+        label: "← Back to Leads",
+        onClick: () => router.push("/dashboard/leads"),
+      },
+    });
+  }, [setHeader, router]);
+
+  // ── Fetch Lead Data ─────────────────────────────────────────────────────────
+  useEffect(() => {
+    const fetchLeadData = async () => {
       const token = localStorage.getItem("token");
 
       if (!isValidToken(token)) {
@@ -50,13 +83,9 @@ export default function LeadDetailPage() {
         ]);
 
         const notesData = await notesRes.json();
-
-        if (!notesRes.ok) {
-          throw new Error(notesData?.message || "Failed to fetch notes");
-        }
+        if (!notesRes.ok) throw new Error(notesData?.message || "Failed to fetch notes");
 
         const selectedLead = leadsData.find((item) => item._id === leadId);
-
         if (!selectedLead) {
           setError("Lead not found.");
           setLead(null);
@@ -69,46 +98,35 @@ export default function LeadDetailPage() {
             ? new Date(selectedLead.followUpDate).toISOString().split("T")[0]
             : ""
         );
+        
         const normalizedNotes = Array.isArray(notesData) ? notesData : [];
-        const sortedNotes = [...normalizedNotes].sort(
-          (a, b) => new Date(b.createdAt) - new Date(a.createdAt)
-        );
-        setNotes(sortedNotes);
+        setNotes([...normalizedNotes].sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt)));
       } catch (err) {
         if (err.message === "No auth token found. Please login again.") {
           localStorage.removeItem("token");
           window.location.replace("/login");
           return;
         }
-
         setError(err.message || "Unable to load lead details");
       } finally {
         setLoading(false);
       }
     };
 
-    if (leadId) {
-      fetchLead();
-    }
+    if (leadId) fetchLeadData();
   }, [leadId]);
 
-  const handleStatusUpdate = async (nextStatus) => {
+  // ── Handlers ────────────────────────────────────────────────────────────────
+  
+  const handleStatusChange = async (e) => {
+    const nextStatus = e.target.value;
+    if (nextStatus === lead.status) return;
+
     const token = localStorage.getItem("token");
-
-    if (!isValidToken(token)) {
-      localStorage.removeItem("token");
-      window.location.replace("/login");
-      return;
-    }
-
-    if (!leadId || lead?.status === nextStatus) {
-      return;
-    }
+    if (!isValidToken(token)) return window.location.replace("/login");
 
     try {
-      setUpdatingStatus(nextStatus);
-      setError("");
-
+      setUpdatingStatus(true);
       const res = await fetch(`${API_URL}/leads/${leadId}/status`, {
         method: "PUT",
         headers: {
@@ -119,42 +137,51 @@ export default function LeadDetailPage() {
       });
 
       const data = await res.json();
+      if (!res.ok) throw new Error(data?.message || "Failed to update status");
 
-      if (!res.ok) {
-        throw new Error(data?.message || "Failed to update lead status");
-      }
-
-      setLead((prev) => ({
-        ...prev,
-        status: data?.status || nextStatus,
-      }));
+      setLead((prev) => ({ ...prev, status: data?.status || nextStatus }));
     } catch (err) {
-      setError(err.message || "Unable to update lead status");
+      alert(err.message);
     } finally {
-      setUpdatingStatus("");
+      setUpdatingStatus(false);
+    }
+  };
+
+  const handleSetFollowUpDate = async (e) => {
+    e.preventDefault();
+    const token = localStorage.getItem("token");
+    if (!isValidToken(token)) return window.location.replace("/login");
+
+    try {
+      setUpdatingFollowUpDate(true);
+      const res = await fetch(`${API_URL}/leads/${leadId}/status`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token.trim()}`,
+        },
+        body: JSON.stringify({ followUpDate: followUpDateInput }),
+      });
+
+      const data = await res.json();
+      if (!res.ok) throw new Error(data?.message || "Failed to set date");
+
+      setLead((prev) => ({ ...prev, followUpDate: data?.followUpDate || followUpDateInput }));
+    } catch (err) {
+      alert(err.message);
+    } finally {
+      setUpdatingFollowUpDate(false);
     }
   };
 
   const handleAddNote = async (e) => {
     e.preventDefault();
-
     const token = localStorage.getItem("token");
     const content = noteInput.trim();
-
-    if (!isValidToken(token)) {
-      localStorage.removeItem("token");
-      window.location.replace("/login");
-      return;
-    }
-
-    if (!content || !leadId) {
-      return;
-    }
+    if (!content || !isValidToken(token)) return;
 
     try {
       setAddingNote(true);
-      setError("");
-
       const res = await fetch(`${API_URL}/notes/${leadId}`, {
         method: "POST",
         headers: {
@@ -165,215 +192,179 @@ export default function LeadDetailPage() {
       });
 
       const data = await res.json();
-
-      if (!res.ok) {
-        throw new Error(data?.message || "Failed to add note");
-      }
+      if (!res.ok) throw new Error(data?.message || "Failed to add note");
 
       setNoteInput("");
       setNotes((prev) => [data, ...prev]);
     } catch (err) {
-      setError(err.message || "Unable to add note");
+      alert(err.message);
     } finally {
       setAddingNote(false);
     }
   };
 
-  const handleSetFollowUpDate = async (e) => {
-    e.preventDefault();
-
-    const token = localStorage.getItem("token");
-    const selectedDate = followUpDateInput.trim();
-
-    if (!isValidToken(token)) {
-      localStorage.removeItem("token");
-      window.location.replace("/login");
-      return;
-    }
-
-    if (!leadId || !selectedDate) {
-      return;
-    }
-
-    try {
-      setUpdatingFollowUpDate(true);
-      setError("");
-
-      const res = await fetch(`${API_URL}/leads/${leadId}/status`, {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token.trim()}`,
-        },
-        body: JSON.stringify({ followUpDate: selectedDate }),
-      });
-
-      const data = await res.json();
-
-      if (!res.ok) {
-        throw new Error(data?.message || "Failed to set follow-up date");
-      }
-
-      setLead((prev) => ({
-        ...prev,
-        followUpDate: data?.followUpDate || selectedDate,
-      }));
-      setFollowUpDateInput(
-        data?.followUpDate
-          ? new Date(data.followUpDate).toISOString().split("T")[0]
-          : selectedDate
-      );
-    } catch (err) {
-      setError(err.message || "Unable to set follow-up date");
-    } finally {
-      setUpdatingFollowUpDate(false);
-    }
-  };
+  // ── Render States ───────────────────────────────────────────────────────────
 
   if (loading) {
     return (
-      <section className="rounded-lg border border-gray-200 bg-white p-5 shadow-sm">
-        <p className="text-gray-600">Loading...</p>
-      </section>
+      <div className="flex h-64 items-center justify-center rounded-xl bg-white shadow-sm ring-1 ring-gray-200">
+        <FiLoader className="h-6 w-6 animate-spin text-blue-600" />
+      </div>
     );
   }
 
   if (error) {
     return (
-      <section className="rounded-lg border border-red-200 bg-red-50 p-5 shadow-sm">
-        <p className="text-red-600">{error}</p>
-      </section>
-    );
-  }
-
-  if (!lead) {
-    return (
-      <section className="rounded-lg border border-gray-200 bg-white p-5 shadow-sm">
-        <p className="text-gray-600">Lead data unavailable.</p>
-      </section>
+      <div className="flex items-center gap-3 rounded-xl border border-red-200 bg-red-50 p-6 text-sm text-red-600 shadow-sm">
+        <FiAlertCircle className="h-5 w-5" />
+        {error}
+      </div>
     );
   }
 
   return (
-    <section className="space-y-5">
-      <div className="flex items-center justify-between">
-        <h1 className="text-2xl font-semibold text-gray-900">Lead Detail</h1>
-        <Link
-          href="/dashboard/leads/"
-          className="rounded-md border border-gray-300 bg-white px-3 py-2 text-sm text-gray-700 transition hover:bg-gray-50"
-        >
-          Back to Leads
-        </Link>
-      </div>
-
-      <article className="rounded-lg border border-gray-200 bg-white p-6 shadow-sm">
-        <div className="grid grid-cols-1 gap-5 md:grid-cols-2">
-          <div>
-            <p className="text-sm text-gray-500">Name</p>
-            <p className="mt-1 text-base font-medium text-gray-900">{lead.name}</p>
-          </div>
-          <div>
-            <p className="text-sm text-gray-500">Email</p>
-            <p className="mt-1 text-base font-medium text-gray-900">{lead.email}</p>
-          </div>
-          <div className="md:col-span-2">
-            <p className="text-sm text-gray-500">Message</p>
-            <p className="mt-1 text-base text-gray-800">{lead.message || "No message"}</p>
-          </div>
-          <div>
-            <p className="text-sm text-gray-500">Status</p>
-            <p className="mt-1 text-base font-medium capitalize text-gray-900">
-              {lead.status || "unknown"}
-            </p>
-            <div className="mt-4 flex flex-wrap gap-3">
-              <button
-                type="button"
-                onClick={() => handleStatusUpdate("contacted")}
-                disabled={lead.status === "contacted" || updatingStatus !== ""}
-                className="rounded-md bg-blue-600 px-4 py-2 text-sm font-medium text-white transition hover:bg-blue-700 disabled:cursor-not-allowed disabled:opacity-60"
-              >
-                {updatingStatus === "contacted" ? "Updating..." : "Mark Contacted"}
-              </button>
-              <button
-                type="button"
-                onClick={() => handleStatusUpdate("converted")}
-                disabled={lead.status === "converted" || updatingStatus !== ""}
-                className="rounded-md bg-green-600 px-4 py-2 text-sm font-medium text-white transition hover:bg-green-700 disabled:cursor-not-allowed disabled:opacity-60"
-              >
-                {updatingStatus === "converted" ? "Updating..." : "Mark Converted"}
-              </button>
+    <div className="mx-auto max-w-5xl space-y-6 mt-4 pb-12">
+      
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        
+        {/* ── Column Left (Info & Message) ── */}
+        <div className="lg:col-span-2 space-y-6">
+          
+          {/* Lead Info Card */}
+          <section className="rounded-xl bg-white p-6 shadow-sm ring-1 ring-gray-200">
+            <div className="flex items-start justify-between">
+              <div className="space-y-1">
+                <h2 className="text-2xl font-bold text-gray-900">{lead.name}</h2>
+                <div className="flex items-center gap-4">
+                  <p className="flex items-center gap-1.5 text-sm text-gray-500">
+                    <FiMail className="text-gray-400" /> {lead.email}
+                  </p>
+                  <p className="flex items-center gap-1.5 text-sm text-gray-500">
+                    <FiGlobe className="text-gray-400" /> {lead.source || "Manual Entry"}
+                  </p>
+                </div>
+              </div>
+              <div className={`rounded-full px-3 py-1 text-xs font-semibold border capitalize ${STATUS_CONFIG[lead.status]?.color}`}>
+                {STATUS_CONFIG[lead.status]?.label || lead.status}
+              </div>
             </div>
-          </div>
-          <div>
-            <p className="text-sm text-gray-500">Follow-Up Date</p>
-            <p className="mt-1 rounded-md bg-amber-50 px-3 py-2 text-sm text-amber-900">
-              Next Follow-Up:{" "}
-              {lead.followUpDate
-                ? new Date(lead.followUpDate).toLocaleDateString(undefined, {
-                    dateStyle: "medium",
-                  })
-                : "No follow-up scheduled"}
-            </p>
+          </section>
 
-            <form onSubmit={handleSetFollowUpDate} className="mt-4 space-y-3">
-              <input
-                type="date"
-                value={followUpDateInput}
-                onChange={(e) => setFollowUpDateInput(e.target.value)}
-                className="w-full rounded-md border border-gray-300 p-2 text-sm text-gray-800 outline-none transition focus:border-gray-400"
+          {/* Message Card */}
+          <section className="rounded-xl bg-white p-6 shadow-sm ring-1 ring-gray-200">
+            <h3 className="mb-4 flex items-center gap-2 text-sm font-semibold text-gray-900">
+              <FiMessageSquare className="text-gray-400" /> Message
+            </h3>
+            <div className="h-40 overflow-y-auto rounded-lg bg-gray-50 p-4 text-sm text-gray-700 ring-1 ring-inset ring-gray-100">
+              <p className="whitespace-pre-wrap break-words italic">
+                "{lead.message || "No message provided for this lead."}"
+              </p>
+            </div>
+          </section>
+
+          {/* Status & Follow-up Grid Card */}
+          <section className="rounded-xl bg-white p-6 shadow-sm ring-1 ring-gray-200">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+              
+              {/* Status Update */}
+              <div className="space-y-4">
+                <h3 className="flex items-center gap-2 text-sm font-semibold text-gray-900">
+                  <FiActivity className="text-gray-400" /> Update Status
+                </h3>
+                <div className="relative">
+                  <select 
+                    value={lead.status}
+                    onChange={handleStatusChange}
+                    disabled={updatingStatus}
+                    className="w-full appearance-none rounded-lg border border-gray-200 bg-white px-4 py-2.5 text-sm font-medium text-gray-700 outline-none transition focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10 disabled:opacity-50"
+                  >
+                    <option value="new">New Lead</option>
+                    <option value="contacted">Contacted</option>
+                    <option value="converted">Converted / Won</option>
+                  </select>
+                  {updatingStatus && (
+                    <FiLoader className="absolute right-10 top-1/2 h-4 w-4 -translate-y-1/2 animate-spin text-blue-600" />
+                  )}
+                </div>
+              </div>
+
+              {/* Follow-up Date */}
+              <div className="space-y-4">
+                <h3 className="flex items-center gap-2 text-sm font-semibold text-gray-900">
+                  <FiCalendar className="text-gray-400" /> Follow-Up Schedule
+                </h3>
+                <form onSubmit={handleSetFollowUpDate} className="flex items-center gap-2">
+                  <input 
+                    type="date"
+                    value={followUpDateInput}
+                    onChange={(e) => setFollowUpDateInput(e.target.value)}
+                    className="flex-1 rounded-lg border border-gray-200 px-3 py-2 text-sm outline-none transition focus:border-blue-500"
+                  />
+                  <button 
+                    type="submit"
+                    disabled={updatingFollowUpDate || !followUpDateInput}
+                    className="rounded-lg bg-gray-900 px-4 py-2 text-xs font-bold text-white transition hover:bg-gray-800 disabled:opacity-50"
+                  >
+                    {updatingFollowUpDate ? "Saving..." : "Set Date"}
+                  </button>
+                </form>
+                {lead.followUpDate && (
+                  <p className="text-[11px] text-gray-400 font-medium italic">
+                    Current follow-up set for: {new Date(lead.followUpDate).toLocaleDateString()}
+                  </p>
+                )}
+              </div>
+
+            </div>
+          </section>
+
+        </div>
+
+        {/* ── Column Right (Notes) ── */}
+        <div className="space-y-6">
+          <section className="rounded-xl bg-white p-6 shadow-sm ring-1 ring-gray-200 flex flex-col h-full">
+            <h3 className="mb-4 text-sm font-semibold text-gray-900">Activity Notes</h3>
+            
+            {/* Note input */}
+            <form onSubmit={handleAddNote} className="mb-6 space-y-3">
+              <textarea 
+                value={noteInput}
+                onChange={(e) => setNoteInput(e.target.value)}
+                placeholder="Write an internal note..."
+                className="w-full min-h-[100px] rounded-lg border border-gray-200 p-3 text-sm text-gray-700 outline-none transition focus:border-blue-500 placeholder:text-gray-300 resize-none"
               />
-              <button
+              <button 
                 type="submit"
-                disabled={updatingFollowUpDate || !followUpDateInput}
-                className="rounded-md bg-gray-900 px-4 py-2 text-sm font-medium text-white transition hover:bg-gray-800 disabled:cursor-not-allowed disabled:opacity-60"
+                disabled={addingNote || !noteInput.trim()}
+                className="w-full flex items-center justify-center gap-2 rounded-lg bg-blue-600 py-2.5 text-sm font-bold text-white transition hover:bg-blue-700 disabled:opacity-50"
               >
-                {updatingFollowUpDate ? "Setting..." : "Set Follow-Up"}
+                {addingNote ? <FiLoader className="animate-spin" /> : <FiPlus />} Add Note
               </button>
             </form>
-          </div>
+
+            {/* Notes list */}
+            <div className="flex-1 space-y-4 overflow-y-auto max-h-[400px] pr-2 custom-scrollbar">
+              {notes.length === 0 ? (
+                <p className="text-center text-xs text-gray-400 py-8 italic">No notes added yet.</p>
+              ) : (
+                notes.map((note) => (
+                  <div key={note._id} className="rounded-lg bg-gray-50 p-4 border border-gray-100 shadow-xs">
+                    <p className="text-sm text-gray-800 leading-relaxed">{note.content}</p>
+                    <p className="mt-2 text-[10px] font-medium text-gray-400 uppercase tracking-wider">
+                      {new Date(note.createdAt).toLocaleString(undefined, {
+                        dateStyle: "medium",
+                        timeStyle: "short",
+                      })}
+                    </p>
+                  </div>
+                ))
+              )}
+            </div>
+          </section>
         </div>
-      </article>
 
-      <article className="rounded-lg border border-gray-200 bg-white p-6 shadow-sm">
-        <h2 className="mb-4 text-xl font-semibold text-gray-900">Notes</h2>
+      </div>
 
-        <form onSubmit={handleAddNote} className="mb-5 space-y-3">
-          <textarea
-            value={noteInput}
-            onChange={(e) => setNoteInput(e.target.value)}
-            placeholder="Write a note..."
-            className="min-h-24 w-full rounded-md border border-gray-300 p-3 text-sm text-gray-800 outline-none transition focus:border-gray-400"
-          />
-          <button
-            type="submit"
-            disabled={addingNote || !noteInput.trim()}
-            className="rounded-md bg-gray-900 px-4 py-2 text-sm font-medium text-white transition hover:bg-gray-800 disabled:cursor-not-allowed disabled:opacity-60"
-          >
-            {addingNote ? "Adding..." : "Add Note"}
-          </button>
-        </form>
-
-        {notes.length === 0 ? (
-          <p className="text-gray-600">No notes available for this lead.</p>
-        ) : (
-          <div className="space-y-3">
-            {notes.map((note) => (
-              <div
-                key={note._id}
-                className="rounded-lg border border-gray-200 bg-gray-50 p-4"
-              >
-                <p className="text-sm text-gray-800">{note.content}</p>
-                <p className="mt-2 text-xs text-gray-500">
-                  {new Date(note.createdAt).toLocaleString(undefined, {
-                    dateStyle: "medium",
-                    timeStyle: "short",
-                  })}
-                </p>
-              </div>
-            ))}
-          </div>
-        )}
-      </article>
-    </section>
+    </div>
   );
 }

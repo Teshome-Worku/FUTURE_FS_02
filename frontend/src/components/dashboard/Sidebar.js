@@ -56,7 +56,7 @@ export default function Sidebar() {
     href === "/dashboard" ? pathname === href : pathname.startsWith(href);
 
   return (
-    <aside className="fixed inset-y-0 left-0 z-30 flex w-64 flex-col bg-gray-900 text-white">
+    <aside className="w-64 h-full flex-shrink-0 flex flex-col bg-gray-900 text-white">
 
       {/* ── Branding ── */}
       <div className="flex flex-col gap-0.5 border-b border-gray-800 px-6 py-5">

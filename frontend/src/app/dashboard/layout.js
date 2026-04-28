@@ -5,18 +5,18 @@ import { HeaderProvider } from "@/context/HeaderContext";
 export default function DashboardLayout({ children }) {
   return (
     <HeaderProvider>
-      <div className="flex min-h-screen bg-gray-100">
+      <div className="flex h-screen overflow-hidden bg-gray-100">
 
-        {/* ── Fixed sidebar ── */}
+        {/* ── Sidebar (Fixed via parent flex flow) ── */}
         <Sidebar />
 
-        {/* ── Main content area (offset by sidebar width) ── */}
-        <div className="ml-64 flex flex-1 flex-col overflow-x-hidden">
+        {/* ── Main content area ── */}
+        <div className="flex flex-1 flex-col overflow-hidden">
 
-          {/* Sticky header — stays at top while content scrolls */}
+          {/* Fixed header at the top of the main area */}
           <Header />
 
-          {/* Scrollable page content */}
+          {/* Scrollable page content - This is the ONLY scrollable area */}
           <main className="flex-1 overflow-y-auto p-6 md:p-8">
             {children}
           </main>

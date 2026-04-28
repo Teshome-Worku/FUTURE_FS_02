@@ -6,7 +6,7 @@ export default function Header() {
   const { title, subTitle, actionButton } = useHeader();
 
   return (
-    <header className="sticky top-0 z-20 flex items-center justify-between border-b border-gray-200 bg-white px-6 py-4">
+    <header className="flex-shrink-0 border-b border-gray-200 bg-white px-6 py-4 flex items-center justify-between z-10">
 
       {/* ── Left: Page Title ── */}
       <div className="flex flex-col">
