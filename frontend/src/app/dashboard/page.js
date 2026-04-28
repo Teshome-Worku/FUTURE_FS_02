@@ -4,57 +4,101 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 import { getLeads } from "@/services/api";
 import { useHeader } from "@/context/HeaderContext";
+import {
+  FiUsers,
+  FiUserPlus,
+  FiPhone,
+  FiCheckCircle,
+  FiAlertCircle,
+  FiLoader,
+} from "react-icons/fi";
+
+// ─── Token guard ──────────────────────────────────────────────────────────────
 
 const isValidToken = (token) => {
-  if (typeof token !== "string") {
-    return false;
-  }
-
+  if (typeof token !== "string") return false;
   const normalized = token.trim();
   return normalized !== "" && normalized !== "undefined" && normalized !== "null";
 };
 
+// ─── Status badge colour map ──────────────────────────────────────────────────
+
+const STATUS_BADGE = {
+  new:       "bg-gray-100 text-gray-600",
+  contacted: "bg-blue-100 text-blue-700",
+  converted: "bg-green-100 text-green-700",
+};
+
+// ─── Dashboard Page ───────────────────────────────────────────────────────────
+
 export default function Dashboard() {
-  const [leads, setLeads] = useState([]);
-  const [error, setError] = useState("");
+  const [leads, setLeads]     = useState([]);
+  const [error, setError]     = useState("");
   const [loading, setLoading] = useState(true);
-  const { setHeader } = useHeader();
+  const { setHeader }         = useHeader();
+
+  // ── Derived stats ───────────────────────────────────────────────────────────
 
   const today = new Date();
   today.setHours(0, 0, 0, 0);
 
   const isFollowUpDue = (lead) => {
-    if (!lead?.followUpDate) {
-      return false;
-    }
-
+    if (!lead?.followUpDate) return false;
     const followUp = new Date(lead.followUpDate);
-    if (Number.isNaN(followUp.getTime())) {
-      return false;
-    }
-
+    if (Number.isNaN(followUp.getTime())) return false;
     followUp.setHours(0, 0, 0, 0);
     return followUp <= today;
   };
 
   const leadsRequiringAttention = leads.filter(isFollowUpDue);
+  const totalLeads     = leads.length;
+  const newLeads       = leads.filter((l) => l.status === "new").length;
+  const contactedLeads = leads.filter((l) => l.status === "contacted").length;
+  const convertedLeads = leads.filter((l) => l.status === "converted").length;
 
-  const totalLeads = leads.length;
-  const newLeads = leads.filter((lead) => lead.status === "new").length;
-  const contactedLeads = leads.filter((lead) => lead.status === "contacted").length;
-  const convertedLeads = leads.filter((lead) => lead.status === "converted").length;
+  // ── Stat card definitions ───────────────────────────────────────────────────
 
-  const summaryCards = [
-    { title: "Total Leads", value: totalLeads, icon: "TL" },
-    { title: "New Leads", value: newLeads, icon: "NW" },
-    { title: "Contacted Leads", value: contactedLeads, icon: "CT" },
-    { title: "Converted Leads", value: convertedLeads, icon: "CV" },
+  const statCards = [
+    {
+      title:  "Total Leads",
+      value:  totalLeads,
+      icon:   FiUsers,
+      accent: "bg-indigo-50 text-indigo-600",
+    },
+    {
+      title:  "New Leads",
+      value:  newLeads,
+      icon:   FiUserPlus,
+      accent: "bg-blue-50 text-blue-600",
+    },
+    {
+      title:  "Contacted",
+      value:  contactedLeads,
+      icon:   FiPhone,
+      accent: "bg-purple-50 text-purple-600",
+    },
+    {
+      title:  "Converted",
+      value:  convertedLeads,
+      icon:   FiCheckCircle,
+      accent: "bg-emerald-50 text-emerald-600",
+    },
   ];
 
-  // Configure the global Header for this page
+  // ── Configure global Header ─────────────────────────────────────────────────
+
   useEffect(() => {
-    setHeader({ title: "Dashboard", showSearch: false, actionButton: null });
+    setHeader({
+      title: "Dashboard",
+      showSearch: false,
+      actionButton: {
+        label: "＋ Add Lead",
+        onClick: () => console.log("Add Lead clicked"),
+      },
+    });
   }, [setHeader]);
+
+  // ── Fetch leads ─────────────────────────────────────────────────────────────
 
   useEffect(() => {
     const fetchLeads = async () => {
@@ -75,7 +119,6 @@ export default function Dashboard() {
           window.location.replace("/login");
           return;
         }
-
         setError(err.message || "Unable to load leads");
         setLeads([]);
       } finally {
@@ -86,80 +129,128 @@ export default function Dashboard() {
     fetchLeads();
   }, []);
 
+  // ── Render ──────────────────────────────────────────────────────────────────
+
   return (
-    <section>
+    <section className="space-y-8">
 
-      <div className="mb-8 grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-        {summaryCards.map((card) => (
-          <article
-            key={card.title}
-            className="rounded-lg border border-gray-200 bg-white p-5 shadow-sm"
-          >
-            <div className="mb-3 flex items-center justify-between">
-              <p className="text-sm font-medium text-gray-600">{card.title}</p>
-              <span className="inline-flex h-8 w-8 items-center justify-center rounded-full bg-gray-900 text-xs font-semibold text-white">
-                {card.icon}
-              </span>
-            </div>
-            <p className="text-3xl font-semibold text-gray-900">{card.value}</p>
-          </article>
-        ))}
-      </div>
-
-      {!loading && !error && leadsRequiringAttention.length > 0 && (
-        <div className="mb-8 rounded-lg border border-amber-200 bg-amber-50 p-4">
-          <h2 className="text-sm font-semibold text-amber-900">
-            Leads Requiring Attention
-          </h2>
-          <p className="mt-1 text-sm text-amber-800">
-            {leadsRequiringAttention.length} lead
-            {leadsRequiringAttention.length > 1 ? "s" : ""} have follow-up due.
-          </p>
-        </div>
-      )}
-
-      <h2 className="mb-4 text-xl font-semibold text-gray-900">Leads</h2>
-
-      {loading && (
-        <div className="rounded-lg border border-gray-200 bg-white p-4 text-gray-600">
-          Loading leads...
-        </div>
-      )}
-
-      {!loading && error && (
-        <div className="rounded-lg border border-red-200 bg-red-50 p-4 text-red-600">
-          {error}
-        </div>
-      )}
-
-      {!loading && !error && leads.length === 0 && (
-        <div className="rounded-lg border border-gray-200 bg-white p-4 text-gray-600">
-          No leads found.
-        </div>
-      )}
-
-      <div className="space-y-4">
-        {leads.map((lead) => (
-          <Link key={lead._id} href={`/dashboard/${lead._id}`} className="block">
+      {/* ── Stat Cards ── */}
+      <div className="grid grid-cols-1 gap-5 md:grid-cols-2 lg:grid-cols-4">
+        {statCards.map((card) => {
+          const Icon = card.icon;
+          return (
             <article
-              className={`cursor-pointer rounded-lg border p-5 shadow-sm transition hover:bg-gray-50 ${
-                isFollowUpDue(lead)
-                  ? "border-amber-300 bg-amber-50/60"
-                  : "border-gray-200 bg-white"
-              }`}
+              key={card.title}
+              className="flex items-center justify-between rounded-xl bg-white p-5 shadow-sm ring-1 ring-gray-200 transition hover:shadow-md"
             >
-              <h3 className="text-lg font-medium text-gray-900">{lead.name}</h3>
-              <p className="mt-1 text-sm text-gray-600">{lead.email}</p>
-              <p className="mt-2 text-sm text-gray-700">Status: {lead.status}</p>
-              {isFollowUpDue(lead) && (
-                <span className="mt-3 inline-flex rounded-full bg-amber-100 px-2.5 py-1 text-xs font-medium text-amber-900">
-                  Follow-Up Due
-                </span>
-              )}
+              <div>
+                <p className="text-sm font-medium text-gray-500">{card.title}</p>
+                <p className="mt-1 text-3xl font-bold text-gray-900">{card.value}</p>
+              </div>
+              <span
+                className={`flex h-12 w-12 items-center justify-center rounded-xl ${card.accent}`}
+              >
+                <Icon className="h-6 w-6" />
+              </span>
             </article>
-          </Link>
-        ))}
+          );
+        })}
       </div>
+
+      {/* ── Follow-Up Alert Banner ── */}
+      {!loading && !error && leadsRequiringAttention.length > 0 && (
+        <div className="flex items-start gap-3 rounded-xl border border-amber-200 bg-amber-50 p-4">
+          <FiAlertCircle className="mt-0.5 h-5 w-5 flex-shrink-0 text-amber-500" />
+          <div>
+            <p className="text-sm font-semibold text-amber-900">
+              Leads Requiring Attention
+            </p>
+            <p className="mt-0.5 text-sm text-amber-800">
+              {leadsRequiringAttention.length} lead
+              {leadsRequiringAttention.length > 1 ? "s" : ""} have a follow-up
+              due today or earlier.
+            </p>
+          </div>
+        </div>
+      )}
+
+      {/* ── Recent Leads ── */}
+      <div className="rounded-xl bg-white shadow-sm ring-1 ring-gray-200">
+
+        {/* Card header */}
+        <div className="flex items-center justify-between border-b border-gray-100 px-5 py-4">
+          <h2 className="text-base font-semibold text-gray-900">Recent Leads</h2>
+          <Link
+            href="/dashboard"
+            className="text-sm font-medium text-blue-600 transition hover:text-blue-700"
+          >
+            View All →
+          </Link>
+        </div>
+
+        {/* Loading */}
+        {loading && (
+          <div className="flex items-center gap-2 p-5 text-sm text-gray-500">
+            <FiLoader className="h-4 w-4 animate-spin" />
+            Loading leads…
+          </div>
+        )}
+
+        {/* Error */}
+        {!loading && error && (
+          <div className="p-5 text-sm text-red-600">{error}</div>
+        )}
+
+        {/* Empty */}
+        {!loading && !error && leads.length === 0 && (
+          <div className="p-5 text-sm text-gray-500">
+            No leads found. Click{" "}
+            <span className="font-medium text-blue-600">＋ Add Lead</span> to
+            get started.
+          </div>
+        )}
+
+        {/* Top-5 leads sorted by createdAt descending */}
+        {!loading && !error && leads.length > 0 && (
+          <ul>
+            {[...leads]
+              .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
+              .slice(0, 5)
+              .map((lead, idx, arr) => (
+                <li
+                  key={lead._id}
+                  className={idx < arr.length - 1 ? "border-b border-gray-100" : ""}
+                >
+                  <Link
+                    href={`/dashboard/${lead._id}`}
+                    className="flex items-center justify-between px-5 py-4 transition hover:bg-gray-50"
+                  >
+                    {/* Lead info */}
+                    <div className="min-w-0">
+                      <p className="truncate text-sm font-medium text-gray-900">
+                        {lead.name}
+                      </p>
+                      <p className="mt-0.5 truncate text-xs text-gray-500">
+                        {lead.email}
+                      </p>
+                    </div>
+
+                    {/* Status badge */}
+                    <span
+                      className={`ml-4 flex-shrink-0 rounded-full px-2.5 py-1 text-xs font-medium capitalize ${
+                        STATUS_BADGE[lead.status] ?? "bg-gray-100 text-gray-600"
+                      }`}
+                    >
+                      {lead.status}
+                    </span>
+                  </Link>
+                </li>
+              ))}
+          </ul>
+        )}
+
+      </div>
+
     </section>
   );
 }

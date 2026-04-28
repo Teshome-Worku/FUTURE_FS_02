@@ -18,14 +18,14 @@ const sections = [
     label: "Main",
     items: [
       { label: "Dashboard", href: "/dashboard", icon: FiHome },
-      { label: "Leads",     href: "/dashboard", icon: FiUsers },
+      { label: "Leads",     href: "#", icon: FiUsers },
     ],
   },
   {
     label: "Leads",
     items: [
-      { label: "All Leads", href: "/dashboard", icon: FiList },
-      { label: "New Leads", href: "/dashboard", icon: FiUserPlus },
+      { label: "All Leads", href: "#", icon: FiList },
+      { label: "New Leads", href: "#", icon: FiUserPlus },
     ],
   },
   {

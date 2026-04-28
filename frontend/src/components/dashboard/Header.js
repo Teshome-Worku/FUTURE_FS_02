@@ -34,7 +34,7 @@ export default function Header() {
           <button
             type="button"
             onClick={actionButton.onClick}
-            className="rounded-lg bg-blue-600 px-4 py-2 text-sm font-medium text-white transition hover:bg-blue-700 active:scale-95"
+            className="cursor-pointer rounded-lg bg-blue-600 px-4 py-2 text-sm font-medium text-white transition hover:bg-blue-700 active:scale-95"
           >
             {actionButton.label}
           </button>
