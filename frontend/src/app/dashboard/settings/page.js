@@ -174,7 +174,7 @@ export default function SettingsPage() {
           <button
             type="submit"
             disabled={isSavingProfile}
-            className="inline-flex items-center gap-2 rounded-lg bg-blue-600 px-6 py-2.5 text-sm font-bold text-white shadow-sm transition hover:bg-blue-700 active:scale-95 disabled:opacity-50"
+            className="cursor-pointer inline-flex items-center gap-2 rounded-lg bg-blue-600 px-6 py-2.5 text-sm font-bold text-white shadow-sm transition hover:bg-blue-700 active:scale-95 disabled:opacity-50"
           >
             {isSavingProfile ? <FiLoader className="animate-spin" /> : <FiSave />}
             {isSavingProfile ? "Saving..." : "Save Changes"}
@@ -211,7 +211,7 @@ export default function SettingsPage() {
                   value={passwords.currentPassword}
                   onChange={(e) => setPasswords({ ...passwords, currentPassword: e.target.value })}
                   placeholder="••••••••"
-                  className="w-full rounded-lg border border-gray-200 bg-white pl-9 pr-4 py-2.5 text-sm outline-none transition focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10"
+                  className="w-full rounded-lg border border-gray-200 bg-white pl-9 pr-4 py-2.5 text-sm outline-none transition focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10 text-black"
                 />
               </div>
             </div>
@@ -225,7 +225,7 @@ export default function SettingsPage() {
                   value={passwords.newPassword}
                   onChange={(e) => setPasswords({ ...passwords, newPassword: e.target.value })}
                   placeholder="Minimum 6 characters"
-                  className="w-full rounded-lg border border-gray-200 bg-white pl-9 pr-4 py-2.5 text-sm outline-none transition focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10"
+                  className="w-full rounded-lg border border-gray-200 bg-white pl-9 pr-4 py-2.5 text-sm outline-none transition focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10 text-black"
                 />
               </div>
             </div>
@@ -239,7 +239,7 @@ export default function SettingsPage() {
                   value={passwords.confirmPassword}
                   onChange={(e) => setPasswords({ ...passwords, confirmPassword: e.target.value })}
                   placeholder="Confirm your new password"
-                  className="w-full rounded-lg border border-gray-200 bg-white pl-9 pr-4 py-2.5 text-sm outline-none transition focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10"
+                  className="w-full rounded-lg border border-gray-200 bg-white pl-9 pr-4 py-2.5 text-sm outline-none transition focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10 text-black"
                 />
               </div>
             </div>
@@ -248,7 +248,7 @@ export default function SettingsPage() {
           <button
             type="submit"
             disabled={isSavingPassword}
-            className="inline-flex items-center gap-2 rounded-lg bg-gray-900 px-6 py-2.5 text-sm font-bold text-white shadow-sm transition hover:bg-black active:scale-95 disabled:opacity-50"
+            className="cursor-pointer inline-flex items-center gap-2 rounded-lg bg-gray-900 px-6 py-2.5 text-sm font-bold text-white shadow-sm transition hover:bg-black active:scale-95 disabled:opacity-50"
           >
             {isSavingPassword ? <FiLoader className="animate-spin" /> : <FiShield />}
             {isSavingPassword ? "Updating..." : "Change Password"}
