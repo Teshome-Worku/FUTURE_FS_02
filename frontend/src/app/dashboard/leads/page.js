@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { useHeader } from "@/context/HeaderContext";
 import { getLeads, deleteLead } from "@/services/api";
-import { FiLoader, FiInbox, FiEye, FiTrash2, FiSearch } from "react-icons/fi";
+import { FiLoader, FiInbox, FiEye, FiTrash2, FiSearch, FiPlus } from "react-icons/fi";
 
 // ─── Token guard ──────────────────────────────────────────────────────────────
 
@@ -169,7 +169,12 @@ export default function LeadsPage() {
           <FiInbox className="h-10 w-10 text-gray-300" />
           <p className="text-sm font-medium text-gray-500">No leads yet</p>
           <p className="text-xs text-gray-400">
-            Click <span className="font-semibold text-blue-600">+ Add Lead</span> to create your first one.
+            Click <span className="font-semibold text-blue-600">
+              <Link 
+              href="/dashboard/new-lead"
+              title="Add Lead"
+              ><FiPlus className="h-4 w-4 inline" /> Add Lead</Link>
+              </span> to create your first one.
           </p>
         </div>
       )}

@@ -12,6 +12,7 @@ import {
   FiCheckCircle,
   FiAlertCircle,
   FiLoader,
+  FiPlus
 } from "react-icons/fi";
 import {
   BarChart,
@@ -133,7 +134,11 @@ export default function Dashboard() {
       title: "Dashboard",
       subTitle: "Overview of all leads",
       actionButton: {
-        label: "＋ Add Lead",
+        label: (
+          <>
+            <FiPlus className="h-4 w-4 inline" /> Add Lead
+          </>
+        ),
         onClick: () => router.push("/dashboard/new-lead"),
       },
     });
@@ -322,7 +327,12 @@ export default function Dashboard() {
         {!loading && !error && leads.length === 0 && (
           <div className="p-5 text-sm text-gray-500">
             No leads found. Click{" "}
-            <span className="font-medium text-blue-600">＋ Add Lead</span> to
+            <span className="font-medium text-blue-600">
+              <Link
+                href="/dashboard/new-lead"
+                title="Add Lead">
+                  <FiPlus className="h-4 w-4 inline" />Add Lead</Link>
+            </span> to
             get started.
           </div>
         )}

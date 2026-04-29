@@ -125,7 +125,7 @@ export default function NewLeadPage() {
                 placeholder="e.g. John Doe"
                 value={formData.name}
                 onChange={handleChange}
-                className="w-full rounded-xl border border-gray-200 bg-white px-4 py-2.5 text-sm outline-none transition focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10 placeholder:text-gray-300"
+                className="w-full rounded-xl border border-gray-200 bg-white px-4 py-2.5 text-sm outline-none transition focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10 placeholder:text-gray-300 text-gray-600"
               />
             </div>
 
@@ -142,7 +142,7 @@ export default function NewLeadPage() {
                 placeholder="john@example.com"
                 value={formData.email}
                 onChange={handleChange}
-                className="w-full rounded-xl border border-gray-200 bg-white px-4 py-2.5 text-sm outline-none transition focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10 placeholder:text-gray-300"
+                className="w-full rounded-xl border border-gray-200 bg-white px-4 py-2.5 text-sm outline-none transition focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10 placeholder:text-gray-300 text-gray-600"
               />
             </div>
           </div>
@@ -157,7 +157,7 @@ export default function NewLeadPage() {
               name="source"
               value={formData.source}
               onChange={handleChange}
-              className="w-full rounded-xl border border-gray-200 bg-white px-4 py-2.5 text-sm outline-none transition focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10 appearance-none cursor-pointer"
+              className="w-full rounded-xl border border-gray-200 bg-white px-4 py-2.5 text-sm outline-none transition focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10 appearance-none cursor-pointer text-gray-600"
             >
               <option value="Manual Entry">Manual Entry</option>
               <option value="Website">Website</option>
@@ -181,7 +181,7 @@ export default function NewLeadPage() {
               placeholder="Tell us more about this lead..."
               value={formData.message}
               onChange={handleChange}
-              className="w-full rounded-xl border border-gray-200 bg-white px-4 py-2.5 text-sm outline-none transition focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10 placeholder:text-gray-300 resize-none text-black"
+              className="w-full rounded-xl border border-gray-200 bg-white px-4 py-2.5 text-sm outline-none transition focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10 placeholder:text-gray-300 resize-none text-gray-600"
             />
           </div>
 
