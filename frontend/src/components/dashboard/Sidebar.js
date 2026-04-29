@@ -2,6 +2,8 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { getMe } from "@/services/api";
+import { useState,useEffect } from "react";
 import {
   FiHome,
   FiUsers,
@@ -50,6 +52,30 @@ function NavItem({ item, isActive }) {
 
 export default function Sidebar() {
   const pathname = usePathname();
+
+const [user, setUser] = useState({
+  name:"",
+  email:""
+});
+  useEffect(() => {
+    const fetchUser = async () => {
+      const token=localStorage.getItem("token");
+      try {
+        const response = await getMe(token);
+        setUser({
+          name: response.name,
+          email: response.email,
+        });
+      } catch (err) {
+        console.error("Failed to fetch user:", err);
+        if (err.message.includes("Not authorized")) {
+          localStorage.removeItem("token");
+          window.location.replace("/login");
+        }
+      }
+    };
+    fetchUser();
+  }, []);
 
   // Exact match for /dashboard, prefix match for everything else
   const isActive = (href) =>
@@ -104,13 +130,20 @@ export default function Sidebar() {
         </button>
 
         {/* Profile card */}
-        <div className="mt-2 flex items-center gap-3 rounded-lg bg-gray-800 px-3 py-3">
-          <div className="flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-full bg-indigo-600 text-xs font-bold text-white">
-            JD
+        <div className="mt-2 flex items-center gap-3 rounded-lg bg-gray-800 px-3 py-3 border border-gray-700/50">
+          <div className="flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-full bg-indigo-600 text-xs font-bold text-white shadow-inner">
+            {user.name 
+              ? user.name.split(" ").map(n => n[0]).join("").toUpperCase().slice(0, 2)
+              : "??"
+            }
           </div>
           <div className="min-w-0">
-            <p className="truncate text-sm font-medium text-white">John Doe</p>
-            <p className="truncate text-[11px] text-gray-400">john@leadflow.io</p>
+            <p className="truncate text-sm font-semibold text-white">
+              {user.name || "Loading..."}
+            </p>
+            <p className="truncate text-[10px] text-gray-400 font-medium">
+              {user.email || "Fetching profile..."}
+            </p>
           </div>
         </div>
 
