@@ -181,7 +181,7 @@ export default function Dashboard() {
     <section className="space-y-8">
 
       {/* ── Stat Cards ── */}
-      <div className="grid grid-cols-1 gap-5 md:grid-cols-2 lg:grid-cols-4">
+      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
         {statCards.map((card) => {
           const Icon = card.icon;
           return (
@@ -205,7 +205,7 @@ export default function Dashboard() {
 
       {/* ── Insights: Bar + Pie Charts ── */}
       {!loading && !error && leads.length > 0 && (
-        <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
+        <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
 
           {/* Bar chart — Leads Over Time */}
           <div className="rounded-xl bg-white p-5 shadow-sm ring-1 ring-gray-200">
@@ -297,7 +297,7 @@ export default function Dashboard() {
       )}
 
       {/* ── Recent Leads ── */}
-      <div className="rounded-xl bg-white shadow-sm ring-1 ring-gray-200">
+      <div className="rounded-xl bg-white shadow-sm ring-1 ring-gray-200 overflow-hidden w-full">
 
         {/* Card header */}
         <div className="flex items-center justify-between border-b border-gray-100 px-5 py-4">

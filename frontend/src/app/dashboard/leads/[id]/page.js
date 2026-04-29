@@ -231,20 +231,22 @@ export default function LeadDetailPage() {
         <div className="lg:col-span-2 space-y-6">
           
           {/* Lead Info Card */}
-          <section className="rounded-xl bg-white p-6 shadow-sm ring-1 ring-gray-200">
-            <div className="flex items-start justify-between">
-              <div className="space-y-1">
-                <h2 className="text-2xl font-bold text-gray-900">{lead.name}</h2>
-                <div className="flex items-center gap-4">
+          <section className="rounded-xl bg-white p-6 shadow-sm ring-1 ring-gray-200 overflow-hidden">
+            <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-4">
+              <div className="space-y-2 min-w-0 flex-1">
+                <h2 className="text-xl sm:text-2xl font-bold text-gray-900 break-words">{lead.name}</h2>
+                <div className="flex flex-wrap items-center gap-y-2 gap-x-4">
                   <p className="flex items-center gap-1.5 text-sm text-gray-500">
-                    <FiMail className="text-gray-400" /> {lead.email}
+                    <FiMail className="text-gray-400 flex-shrink-0" /> 
+                    <span className="truncate">{lead.email}</span>
                   </p>
                   <p className="flex items-center gap-1.5 text-sm text-gray-500">
-                    <FiGlobe className="text-gray-400" /> {lead.source || "Manual Entry"}
+                    <FiGlobe className="text-gray-400 flex-shrink-0" /> 
+                    <span className="truncate">{lead.source || "Manual Entry"}</span>
                   </p>
                 </div>
               </div>
-              <div className={`rounded-full px-3 py-1 text-xs font-semibold border capitalize ${STATUS_CONFIG[lead.status]?.color}`}>
+              <div className={`self-start flex-shrink-0 rounded-full px-3 py-1 text-xs font-semibold border capitalize ${STATUS_CONFIG[lead.status]?.color}`}>
                 {STATUS_CONFIG[lead.status]?.label || lead.status}
               </div>
             </div>

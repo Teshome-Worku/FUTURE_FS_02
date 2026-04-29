@@ -32,7 +32,7 @@ const handleLogout=()=>{
 
 // ─── NavItem ──────────────────────────────────────────────────────────────────
 
-function NavItem({ item, isActive }) {
+function NavItem({ item, isActive, onClick }) {
   const Icon = item.icon;
   const base    = "flex items-center gap-3 rounded-md px-3 py-2 text-sm font-medium transition-all duration-150";
   const active  = "bg-gray-800 text-white";
@@ -40,7 +40,7 @@ function NavItem({ item, isActive }) {
 
   return (
     <li>
-      <Link href={item.href} className={`${base} ${isActive ? active : inactive}`}>
+      <Link href={item.href} onClick={onClick} className={`${base} ${isActive ? active : inactive}`}>
         <Icon className="h-4 w-4 flex-shrink-0" />
         <span>{item.label}</span>
       </Link>
@@ -50,7 +50,7 @@ function NavItem({ item, isActive }) {
 
 // ─── Sidebar ──────────────────────────────────────────────────────────────────
 
-export default function Sidebar() {
+export default function Sidebar({ isOpen, onClose }) {
   const pathname = usePathname();
 
 const [user, setUser] = useState({
@@ -68,7 +68,7 @@ const [user, setUser] = useState({
         });
       } catch (err) {
         console.error("Failed to fetch user:", err);
-        if (err.message.includes("Not authorized")) {
+        if (err?.message?.includes("Not authorized")) {
           localStorage.removeItem("token");
           window.location.replace("/login");
         }
@@ -82,7 +82,11 @@ const [user, setUser] = useState({
     href === "/dashboard" ? pathname === href : pathname.startsWith(href);
 
   return (
-    <aside className="w-64 h-full flex-shrink-0 flex flex-col bg-gray-900 text-white">
+    <aside className={`
+      fixed inset-y-0 left-0 z-40 w-64 bg-gray-900 transform transition-transform duration-300 flex flex-col h-full flex-shrink-0 text-white
+      md:relative md:translate-x-0
+      ${isOpen ? "translate-x-0 shadow-2xl" : "-translate-x-full"}
+    `}>
 
       {/* ── Branding ── */}
       <div className="flex flex-col gap-0.5 border-b border-gray-800 px-6 py-5">
@@ -102,6 +106,7 @@ const [user, setUser] = useState({
               key={item.href}
               item={item}
               isActive={isActive(item.href)}
+              onClick={onClose}
             />
           ))}
         </ul>
@@ -116,6 +121,7 @@ const [user, setUser] = useState({
             key={item.label}
             item={item}
             isActive={isActive(item.href)}
+            onClick={onClose}
           />
         ))}
 
