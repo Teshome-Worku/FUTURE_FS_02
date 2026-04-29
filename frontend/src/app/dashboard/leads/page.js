@@ -6,6 +6,7 @@ import Link from "next/link";
 import { useHeader } from "@/context/HeaderContext";
 import { getLeads, deleteLead } from "@/services/api";
 import { FiLoader, FiInbox, FiEye, FiTrash2, FiSearch, FiPlus } from "react-icons/fi";
+import ConfirmModal from "@/components/ui/ConfirmModal";
 
 // ─── Token guard ──────────────────────────────────────────────────────────────
 
@@ -31,26 +32,37 @@ export default function LeadsPage() {
   const [loading, setLoading]       = useState(true);
   const [search, setSearch]         = useState("");
   const [selectedStatus, setSelectedStatus] = useState("All");
-  const [deletingId, setDeletingId] = useState(null);
+  
+  // Modal states
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [leadToDelete, setLeadToDelete] = useState(null);
+  const [isDeleting, setIsDeleting]     = useState(false);
 
   const router        = useRouter();
   const { setHeader } = useHeader();
 
-  // ── Delete handler ──────────────────────────────────────────────────────────
+  // ── Delete flow ─────────────────────────────────────────────────────────────
 
-  const handleDelete = async (id) => {
-    if (!window.confirm("Delete this lead? This action cannot be undone.")) return;
+  const handleDeleteClick = (id) => {
+    setLeadToDelete(id);
+    setIsModalOpen(true);
+  };
 
+  const handleConfirmDelete = async () => {
+    if (!leadToDelete) return;
+    
     const token = localStorage.getItem("token");
-    setDeletingId(id);
+    setIsDeleting(true);
 
     try {
-      await deleteLead(id, token);
-      setLeads((prev) => prev.filter((l) => l._id !== id));
+      await deleteLead(leadToDelete, token);
+      setLeads((prev) => prev.filter((l) => l._id !== leadToDelete));
+      setIsModalOpen(false);
     } catch (err) {
       alert(err.message || "Failed to delete lead");
     } finally {
-      setDeletingId(null);
+      setIsDeleting(false);
+      setLeadToDelete(null);
     }
   };
 
@@ -213,7 +225,7 @@ export default function LeadsPage() {
                         <p>No leads found matching your criteria.</p>
                         <button 
                           onClick={() => { setSearch(""); setSelectedStatus("All"); }}
-                          className="text-blue-600 hover:underline text-xs"
+                          className="cursor-pointer text-blue-600 hover:underline text-xs"
                         >
                           Reset filters
                         </button>
@@ -284,19 +296,14 @@ export default function LeadsPage() {
                           <FiEye className="h-4 w-4" />
                         </Link>
 
-                        {/* Delete */}
                         <button
                           type="button"
                           title="Delete lead"
-                          disabled={deletingId === lead._id}
-                          onClick={() => handleDelete(lead._id)}
+                          disabled={isDeleting && leadToDelete === lead._id}
+                          onClick={() => handleDeleteClick(lead._id)}
                           className="cursor-pointer inline-flex items-center justify-center rounded-lg p-2 text-gray-400 transition hover:bg-red-50 hover:text-red-500 disabled:opacity-40"
                         >
-                          {deletingId === lead._id ? (
-                            <FiLoader className="h-4 w-4 animate-spin" />
-                          ) : (
-                            <FiTrash2 className="h-4 w-4" />
-                          )}
+                          <FiTrash2 className="h-4 w-4" />
                         </button>
 
                       </div>
@@ -311,6 +318,16 @@ export default function LeadsPage() {
         </div>
       </div>
     )}
+
+    {/* ── Confirmation Modal ── */}
+    <ConfirmModal 
+      isOpen={isModalOpen}
+      onClose={() => setIsModalOpen(false)}
+      onConfirm={handleConfirmDelete}
+      isLoading={isDeleting}
+      title="Delete Lead"
+      description="Are you sure you want to delete this lead? This action is permanent and cannot be undone."
+    />
 
   </section>
   );
