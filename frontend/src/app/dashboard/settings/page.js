@@ -9,6 +9,7 @@ import {
   FiCheckCircle, 
   FiSave 
 } from "react-icons/fi";
+const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
 export default function SettingsPage() {
   const { setHeader } = useHeader();
@@ -96,7 +97,7 @@ export default function SettingsPage() {
             <button
               type="submit"
               disabled={isSaving}
-              className="inline-flex items-center gap-2 rounded-lg bg-blue-600 px-6 py-2.5 text-sm font-bold text-white shadow-sm transition hover:bg-blue-700 active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed"
+              className="cursor-pointer inline-flex items-center gap-2 rounded-lg bg-blue-600 px-6 py-2.5 text-sm font-bold text-white shadow-sm transition hover:bg-blue-700 active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed"
             >
               {isSaving ? (
                 <div className="h-4 w-4 animate-spin border-2 border-white/20 border-t-white rounded-full" />
