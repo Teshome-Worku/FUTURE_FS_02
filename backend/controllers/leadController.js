@@ -8,6 +8,9 @@ export const createLead = async (req, res) => {
     if(user){
       return res.status(400).json({ message: "Lead already exists" });
     }
+    if(!name || !email || !message || !source){
+      return res.status(400).json({ message: "Please fill all the fields" });
+    }
 
     const lead = new Lead({
       name,

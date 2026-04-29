@@ -50,7 +50,7 @@ export default function NewLeadPage() {
     e.preventDefault();
     
     // Basic Validation
-    if (!formData.name || !formData.email || !formData.message) {
+    if (!formData.name || !formData.email || !formData.message || !formData.source) {
       setStatus({ type: "error", message: "Please fill in all required fields." });
       return;
     }
