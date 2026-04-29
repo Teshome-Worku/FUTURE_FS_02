@@ -74,6 +74,9 @@ export default function NewLeadPage() {
 
     } catch (err) {
       setStatus({ type: "error", message: err.message || "Failed to create lead." });
+      setTimeout(()=>{
+        setStatus({ type: "", message: "" });
+      },5000)
     } finally {
       setLoading(false);
     }
@@ -189,7 +192,7 @@ export default function NewLeadPage() {
           <button
             type="submit"
             disabled={loading}
-            className={`w-full flex items-center justify-center gap-2 rounded-xl py-3 text-sm font-bold text-white transition-all transform active:scale-[0.98] ${
+            className={`cursor-pointer w-full flex items-center justify-center gap-2 rounded-xl py-3 text-sm font-bold text-white transition-all transform active:scale-[0.98] ${
               loading 
                 ? "bg-blue-400 cursor-not-allowed" 
                 : "bg-blue-600 hover:bg-blue-700 hover:shadow-lg hover:shadow-blue-500/20"

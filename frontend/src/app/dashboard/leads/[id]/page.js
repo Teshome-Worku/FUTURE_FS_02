@@ -303,7 +303,7 @@ export default function LeadDetailPage() {
                   <button 
                     type="submit"
                     disabled={updatingFollowUpDate || !followUpDateInput}
-                    className="rounded-lg bg-gray-900 px-4 py-2 text-xs font-bold text-white transition hover:bg-gray-800 disabled:opacity-50"
+                    className="cursor-pointer rounded-lg bg-gray-900 px-4 py-2 text-xs font-bold text-white transition hover:bg-gray-800 disabled:opacity-50"
                   >
                     {updatingFollowUpDate ? "Saving..." : "Set Date"}
                   </button>
@@ -336,7 +336,7 @@ export default function LeadDetailPage() {
               <button 
                 type="submit"
                 disabled={addingNote || !noteInput.trim()}
-                className="w-full flex items-center justify-center gap-2 rounded-lg bg-blue-600 py-2.5 text-sm font-bold text-white transition hover:bg-blue-700 disabled:opacity-50"
+                className="cursor-pointer w-full flex items-center justify-center gap-2 rounded-lg bg-blue-600 py-2.5 text-sm font-bold text-white transition hover:bg-blue-700 disabled:opacity-50"
               >
                 {addingNote ? <FiLoader className="animate-spin" /> : <FiPlus />} Add Note
               </button>

@@ -6,9 +6,9 @@ export const createLead = async (req, res) => {
     const { name, email, message, source } = req.body;
     const user=await Lead.findOne({email});
     if(user){
-      return res.status(400).json({ message: "Lead already exists" });
+      return res.status(400).json({ message: "This lead already exists" });
     }
-    if(!name || !email || !message || !source){
+    if(!name.trim() || !email.trim() || !message.trim() || !source.trim()){
       return res.status(400).json({ message: "Please fill all the fields" });
     }
 

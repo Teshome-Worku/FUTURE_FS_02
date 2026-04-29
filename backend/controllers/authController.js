@@ -103,6 +103,12 @@ export const updateProfile = async (req, res) => {
         }
 
         const { name } = req.body;
+        if(!name.trim()){
+            return res.status(400).json({ message: "Please provide name" });
+        }
+        if(name.trim() === user.name){
+            return res.status(400).json({ message: "Please provide different name" });
+        }
 
         user.name = name || user.name;
 

@@ -63,8 +63,12 @@ export default function SettingsPage() {
     e.preventDefault();
     if (!profile.name.trim()) {
       setProfileStatus({ type: "error", message: "Name cannot be empty." });
+      setTimeout(()=>{
+        setProfileStatus({ type: "", message: "" });
+      },2000)
       return;
     }
+    
 
     setIsSavingProfile(true);
     setProfileStatus({ type: "", message: "" });
@@ -76,6 +80,9 @@ export default function SettingsPage() {
       setTimeout(() => setProfileStatus({ type: "", message: "" }), 3000);
     } catch (err) {
       setProfileStatus({ type: "error", message: err.message || "Failed to update profile." });
+      setTimeout(()=>{
+        setProfileStatus({ type: "", message: "" });
+      },2000)
     } finally {
       setIsSavingProfile(false);
     }
@@ -88,16 +95,25 @@ export default function SettingsPage() {
     // Validation
     if (!passwords.currentPassword || !passwords.newPassword || !passwords.confirmPassword) {
       setPasswordStatus({ type: "error", message: "All fields are required." });
+      setTimeout(()=>{
+        setPasswordStatus({ type: "", message: "" });
+      },2000)
       return;
     }
 
     if (passwords.newPassword.length < 6) {
       setPasswordStatus({ type: "error", message: "New password must be at least 6 characters." });
+      setTimeout(()=>{
+        setPasswordStatus({ type: "", message: "" });
+      },2000)
       return;
     }
 
     if (passwords.newPassword !== passwords.confirmPassword) {
       setPasswordStatus({ type: "error", message: "Passwords do not match." });
+      setTimeout(()=>{
+        setPasswordStatus({ type: "", message: "" });
+      },2000)
       return;
     }
 
@@ -116,6 +132,7 @@ export default function SettingsPage() {
       setTimeout(() => setPasswordStatus({ type: "", message: "" }), 3000);
     } catch (err) {
       setPasswordStatus({ type: "error", message: err.message || "Failed to change password." });
+      setTimeout(() => setPasswordStatus({ type: "", message: "" }), 3000);
     } finally {
       setIsSavingPassword(false);
     }
