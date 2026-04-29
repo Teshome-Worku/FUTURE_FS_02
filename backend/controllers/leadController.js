@@ -4,6 +4,10 @@ import Lead from "../models/Lead.js";
 export const createLead = async (req, res) => {
   try {
     const { name, email, message, source } = req.body;
+    const user=await Lead.findOne({email});
+    if(user){
+      return res.status(400).json({ message: "Lead already exists" });
+    }
 
     const lead = new Lead({
       name,

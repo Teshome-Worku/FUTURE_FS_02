@@ -79,3 +79,65 @@ export const createLead = async (leadData, token) => {
 
     return data;
 };
+
+//get user
+export const getMe = async (token) => {
+    if (!isValidToken(token)) {
+        throw new Error("No auth token found. Please login again.");
+    }
+    const normalizedToken = token.trim();
+    const res = await fetch(`${API_URL}/auth/me`, {
+        method: "GET",
+        headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${normalizedToken}`,
+        },
+    });
+    const data = await res.json();
+    if (!res.ok) {
+        throw new Error((data && data.message) || "Failed to fetch user");
+    }
+    return data;
+};
+
+//update profile
+export const updateProfile = async (profileData, token) => {
+    if (!isValidToken(token)) {
+        throw new Error("No auth token found. Please login again.");
+    }
+    const normalizedToken = token.trim();
+    const res = await fetch(`${API_URL}/auth/update-profile`, {
+        method: "PUT",
+        headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${normalizedToken}`,
+        },
+        body: JSON.stringify(profileData),
+    });
+    const data = await res.json();
+    if (!res.ok) {
+        throw new Error((data && data.message) || "Failed to update profile");
+    }
+    return data;
+};
+
+//change password
+export const changePassword = async (passwordData, token) => {
+    if (!isValidToken(token)) {
+        throw new Error("No auth token found. Please login again.");
+    }
+    const normalizedToken = token.trim();
+    const res = await fetch(`${API_URL}/auth/change-password`, {
+        method: "PUT",
+        headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${normalizedToken}`,
+        },
+        body: JSON.stringify(passwordData),
+    });
+    const data = await res.json();
+    if (!res.ok) {
+        throw new Error((data && data.message) || "Failed to change password");
+    }
+    return data;
+};
