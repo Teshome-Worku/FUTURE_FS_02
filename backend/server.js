@@ -14,7 +14,10 @@ const app = express();
 connectDB();
 
 // middleware
-app.use(cors());
+app.use(cors({
+    origin: ["http://localhost:3000", "https://future-crm-frontend.vercel.app"],
+    credentials: true
+}));
 app.use(express.json());
 
 //lead routes
