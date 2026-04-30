@@ -13,7 +13,7 @@ export default function DashboardLayout({ children }) {
 
   return (
     <HeaderProvider>
-      <div className="flex h-screen overflow-hidden bg-gray-100 relative">
+      <div className="flex h-screen overflow-hidden bg-gray-950 text-white relative">
         
         {/* Mobile Overlay */}
         {isSidebarOpen && (
