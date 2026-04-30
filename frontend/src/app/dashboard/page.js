@@ -178,20 +178,20 @@ export default function Dashboard() {
   // ── Render ──────────────────────────────────────────────────────────────────
 
   return (
-    <section className="space-y-8">
+    <section className="space-y-6">
 
       {/* ── Stat Cards ── */}
-      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
+      <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
         {statCards.map((card) => {
           const Icon = card.icon;
           return (
             <article
               key={card.title}
-              className="flex items-center justify-between rounded-xl bg-gray-900 p-5 shadow-md border border-gray-800 transition hover:shadow-lg hover:shadow-black/50"
+              className="flex items-center justify-between rounded-xl bg-gray-900 p-6 shadow-md border border-gray-800 transition-all duration-200 ease-in-out hover:bg-gray-800/70 hover:shadow-lg"
             >
               <div>
-                <p className="text-sm font-medium text-gray-400">{card.title}</p>
-                <p className="mt-1 text-3xl font-bold text-white">{card.value}</p>
+                <p className="text-sm text-gray-400">{card.title}</p>
+                <p className="mt-1 text-2xl font-bold text-white">{card.value}</p>
               </div>
               <span
                 className={`flex h-12 w-12 items-center justify-center rounded-xl ${card.accent}`}
@@ -208,8 +208,8 @@ export default function Dashboard() {
         <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
 
           {/* Bar chart — Leads Over Time */}
-          <div className="rounded-xl bg-gray-900 p-5 shadow-md border border-gray-800">
-            <h2 className="mb-4 text-sm font-semibold text-gray-300">Leads Overview</h2>
+          <div className="rounded-xl bg-gray-900 p-6 shadow-md border border-gray-800 transition-all duration-200 ease-in-out hover:bg-gray-800/70 hover:shadow-lg">
+            <h2 className="mb-4 text-sm text-gray-400">Leads Overview</h2>
             <ResponsiveContainer width="100%" height={220}>
               <BarChart data={barData} margin={{ top: 0, right: 8, left: -16, bottom: 0 }}>
                 <CartesianGrid strokeDasharray="3 3" stroke="#374151" />
@@ -241,8 +241,8 @@ export default function Dashboard() {
           </div>
 
           {/* Pie chart — Status Distribution */}
-          <div className="rounded-xl bg-gray-900 p-5 shadow-md border border-gray-800">
-            <h2 className="mb-4 text-sm font-semibold text-gray-300">Lead Status Distribution</h2>
+          <div className="rounded-xl bg-gray-900 p-6 shadow-md border border-gray-800 transition-all duration-200 ease-in-out hover:bg-gray-800/70 hover:shadow-lg">
+            <h2 className="mb-4 text-sm text-gray-400">Lead Status Distribution</h2>
             <ResponsiveContainer width="100%" height={220}>
               <PieChart>
                 <Pie
@@ -301,14 +301,14 @@ export default function Dashboard() {
       )}
 
       {/* ── Recent Leads ── */}
-      <div className="rounded-xl bg-gray-900 shadow-md border border-gray-800 overflow-hidden w-full">
+      <div className="rounded-xl bg-gray-900 shadow-md border border-gray-800 overflow-hidden w-full transition-all duration-200 ease-in-out hover:shadow-lg">
 
         {/* Card header */}
-        <div className="flex items-center justify-between border-b border-gray-800 px-5 py-4">
-          <h2 className="text-base font-semibold text-white">Recent Leads</h2>
+        <div className="flex items-center justify-between border-b border-gray-800 px-6 py-4">
+          <h2 className="text-xl font-semibold text-white">Recent Leads</h2>
           <Link
             href="/dashboard/leads"
-            className="text-sm font-medium text-blue-600 transition hover:text-blue-700"
+            className="text-sm text-blue-500 transition-all duration-150 hover:brightness-110 active:scale-95"
           >
             View All →
           </Link>
@@ -354,14 +354,14 @@ export default function Dashboard() {
                 >
                   <Link
                     href={`/dashboard/leads/${lead._id}`}
-                    className="flex items-center justify-between px-5 py-4 transition hover:bg-gray-800/50"
+                    className="flex items-center justify-between px-6 py-4 transition-all duration-200 ease-in-out hover:bg-gray-800"
                   >
                     {/* Lead info */}
                     <div className="min-w-0">
-                      <p className="truncate text-sm font-medium text-white">
+                      <p className="truncate text-sm text-gray-300">
                         {lead.name}
                       </p>
-                      <p className="mt-0.5 truncate text-xs text-gray-400">
+                      <p className="mt-1 truncate text-sm text-gray-400">
                         {lead.email}
                       </p>
                     </div>

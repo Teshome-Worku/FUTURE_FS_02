@@ -129,7 +129,7 @@ const [user, setUser] = useState({
         <button
           type="button"
           onClick={handleLogout}
-          className="cursor-pointer flex w-full items-center gap-3 rounded-md px-3 py-2 text-sm font-medium text-gray-300 transition-all duration-150 hover:bg-red-500/10 hover:text-red-400"
+          className="cursor-pointer flex w-full items-center gap-3 rounded-md px-3 py-2 text-sm font-medium text-gray-300 transition-all duration-150 hover:bg-red-500/10 hover:text-red-400 active:scale-95"
         >
           <FiLogOut className="h-4 w-4 flex-shrink-0" />
           <span>Logout</span>

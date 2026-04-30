@@ -127,7 +127,7 @@ export default function LeadsPage() {
   // ── Render ──────────────────────────────────────────────────────────────────
 
   return (
-    <section className="space-y-5 mt-1">
+    <section className="space-y-6 mt-1">
 
       {/* ── Filter Bar ── */}
       <div className="flex flex-col md:flex-row justify-between items-center gap-4 mb-4">
@@ -193,18 +193,18 @@ export default function LeadsPage() {
 
       {/* ── Table / Filtered Results ── */}
       {!loading && !error && leads.length > 0 && (
-        <div className="overflow-x-auto rounded-xl bg-gray-900 shadow-md border border-gray-800">
+        <div className="overflow-x-auto rounded-xl bg-gray-900 shadow-md border border-gray-800 transition-all duration-200 ease-in-out hover:shadow-lg">
           <div className="min-w-[900px]">
             <table className="w-full divide-y divide-gray-800">
 
               {/* ── Head ── */}
               <thead>
-                <tr className="bg-gray-800/50">
+                <tr className="bg-gray-900">
                   {["Name", "Email", "Message", "Status", "Follow-Up", "Actions"].map((col) => (
                     <th
                       key={col}
                       scope="col"
-                      className="px-5 py-3 text-left text-xs font-semibold uppercase tracking-wide text-gray-400 whitespace-nowrap"
+                      className="px-4 py-4 text-left text-xs font-semibold uppercase tracking-wide text-gray-500 whitespace-nowrap"
                     >
                       {col}
                     </th>
@@ -236,31 +236,31 @@ export default function LeadsPage() {
                   filtered.map((lead) => (
                     <tr
                       key={lead._id}
-                      className="transition hover:bg-gray-800/50"
+                      className="transition-all duration-200 ease-in-out hover:bg-gray-800"
                     >
                       {/* Name */}
-                      <td className="whitespace-nowrap px-5 py-4">
+                      <td className="whitespace-nowrap px-4 py-4">
                         <span className="text-sm font-semibold text-white">
                           {lead.name || "—"}
                         </span>
                       </td>
 
                       {/* Email */}
-                      <td className="whitespace-nowrap px-5 py-4">
-                        <span className="cursor-pointer hover:text-blue-400 text-xs text-gray-400 transition-colors">
+                      <td className="whitespace-nowrap px-4 py-4">
+                        <span className="cursor-pointer hover:text-blue-400 text-sm text-gray-300 transition-colors">
                           {lead.email || "—"}
                         </span>
                       </td>
 
                       {/* Message (truncated) */}
-                      <td className="px-5 py-4 max-w-[200px]">
-                        <span className="block truncate text-xs text-gray-400 overflow-hidden text-ellipsis whitespace-nowrap">
+                      <td className="px-4 py-4 max-w-[200px]">
+                        <span className="block truncate text-sm text-gray-300 overflow-hidden text-ellipsis whitespace-nowrap">
                           {lead.message || "—"}
                         </span>
                       </td>
 
                     {/* Status badge */}
-                    <td className="whitespace-nowrap px-5 py-4">
+                    <td className="whitespace-nowrap px-4 py-4">
                       <span
                         className={`inline-flex rounded-full px-2.5 py-1 text-xs font-medium capitalize ${
                           STATUS_BADGE[lead.status] ?? "bg-gray-800 text-gray-400"
@@ -271,8 +271,8 @@ export default function LeadsPage() {
                     </td>
 
                     {/* Follow-up date */}
-                    <td className="whitespace-nowrap px-5 py-4">
-                      <span className="text-xs text-gray-500">
+                    <td className="whitespace-nowrap px-4 py-4">
+                      <span className="text-sm text-gray-300">
                         {lead.followUpDate
                           ? new Date(lead.followUpDate).toLocaleDateString("en-US", {
                               year:  "numeric",
@@ -284,14 +284,14 @@ export default function LeadsPage() {
                     </td>
 
                     {/* Actions */}
-                    <td className="whitespace-nowrap px-5 py-4">
+                    <td className="whitespace-nowrap px-4 py-4">
                       <div className="flex items-center gap-2">
 
                     {/* View */}
                         <Link
                           href={`/dashboard/leads/${lead._id}`}
                           title="View lead"
-                          className="inline-flex items-center justify-center rounded-lg p-2 text-gray-500 transition hover:bg-gray-700 hover:text-white"
+                          className="inline-flex items-center justify-center rounded-lg p-2 text-gray-500 transition-all duration-150 hover:bg-gray-700 hover:text-white active:scale-95"
                         >
                           <FiEye className="h-4 w-4" />
                         </Link>
@@ -301,7 +301,7 @@ export default function LeadsPage() {
                           title="Delete lead"
                           disabled={isDeleting && leadToDelete === lead._id}
                           onClick={() => handleDeleteClick(lead._id)}
-                          className="cursor-pointer inline-flex items-center justify-center rounded-lg p-2 text-gray-500 transition hover:bg-red-900/30 hover:text-red-400 disabled:opacity-40"
+                          className="cursor-pointer inline-flex items-center justify-center rounded-lg p-2 text-gray-500 transition-all duration-150 hover:bg-red-900/30 hover:text-red-400 disabled:opacity-40 active:scale-95"
                         >
                           <FiTrash2 className="h-4 w-4" />
                         </button>

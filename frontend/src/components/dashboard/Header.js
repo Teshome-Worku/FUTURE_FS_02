@@ -21,11 +21,11 @@ export default function Header({ onMenuClick }) {
         </button>
 
         <div className="flex flex-col min-w-0">
-          <h1 className="text-lg md:text-xl font-bold text-white tracking-tight leading-none truncate">
+          <h1 className="text-xl font-semibold text-white tracking-tight leading-none truncate">
             {title}
           </h1>
           {subTitle && (
-            <p className="text-[11px] md:text-xs text-gray-400 mt-1 truncate">{subTitle}</p>
+            <p className="text-sm text-gray-400 mt-1 truncate">{subTitle}</p>
           )}
         </div>
       </div>
@@ -37,7 +37,7 @@ export default function Header({ onMenuClick }) {
           <button
             type="button"
             onClick={actionButton.onClick}
-            className="cursor-pointer rounded-lg bg-blue-600 px-3 py-2 md:px-4 md:py-2 text-xs md:text-sm font-medium text-white transition hover:bg-blue-500 active:scale-95 whitespace-nowrap"
+            className="cursor-pointer rounded-lg bg-blue-600 px-3 py-2 md:px-4 md:py-2 text-xs md:text-sm font-medium text-white transition-all duration-150 hover:brightness-110 active:scale-95 whitespace-nowrap"
           >
             {actionButton.label}
           </button>
