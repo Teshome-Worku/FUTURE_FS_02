@@ -2,31 +2,40 @@
 
 This document defines the structure of the database for the CRM system.
 
-## Lead
+## 👤 Lead
+```javascript
 {
   _id,
   name,
   email,
   message,
-  source,        // "website", "linkedin", etc.
+  source,        // "website", "linkedin", "Manual Entry", etc.
   status,        // "new", "contacted", "converted"
   followUpDate,
   createdAt,
   updatedAt
 }
+```
 
-📝 Note (for follow-ups & history)
+## 📝 Note (for follow-ups & history)
+```javascript
 {
   _id,
   leadId,        // reference to Lead
   content,
-  createdAt
+  createdAt,
+  updatedAt
 }
+```
 
-🔐 Admin/User
+## 🔐 Admin/User
+```javascript
 {
   _id,
+  name,
   email,
   password,      // hashed
-  createdAt
+  createdAt,
+  updatedAt
 }
+```
