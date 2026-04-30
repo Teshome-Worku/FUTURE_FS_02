@@ -142,18 +142,18 @@ export default function SettingsPage() {
     <div className="max-w-3xl mx-auto py-6 space-y-8">
 
       {/* ── Profile Section ── */}
-      <section className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
-        <div className="px-6 py-4 border-b border-gray-100 bg-gray-50/30">
-          <h2 className="text-lg font-bold text-gray-900 flex items-center gap-2">
+      <section className="bg-gray-900 rounded-xl shadow-md border border-gray-800 overflow-hidden">
+        <div className="px-6 py-4 border-b border-gray-800 bg-gray-900">
+          <h2 className="text-lg font-bold text-white flex items-center gap-2">
             <FiUser className="text-blue-500" /> Profile Information
           </h2>
-          <p className="text-xs text-gray-500 mt-0.5">Update your display name and view your registered email.</p>
+          <p className="text-xs text-gray-400 mt-0.5">Update your display name and view your registered email.</p>
         </div>
 
         <form onSubmit={handleSaveProfile} className="p-6 space-y-6">
           {profileStatus.message && (
             <div className={`flex items-center gap-2 p-3 rounded-lg text-sm ${
-              profileStatus.type === "success" ? "bg-green-50 text-green-700" : "bg-red-50 text-red-700"
+              profileStatus.type === "success" ? "bg-green-900/30 text-green-400" : "bg-red-900/30 text-red-400"
             }`}>
               {profileStatus.type === "success" ? <FiCheckCircle /> : <FiAlertCircle />}
               {profileStatus.message}
@@ -169,7 +169,7 @@ export default function SettingsPage() {
                   type="text"
                   value={profile.name}
                   onChange={(e) => setProfile({ ...profile, name: e.target.value })}
-                  className="w-full rounded-lg border border-gray-200 bg-white pl-9 pr-4 py-2.5 text-sm text-gray-700 outline-none transition focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10"
+                  className="w-full rounded-lg border border-gray-700 bg-gray-800 pl-9 pr-4 py-2.5 text-sm text-white outline-none transition focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10"
                 />
               </div>
             </div>
@@ -182,7 +182,7 @@ export default function SettingsPage() {
                   type="email"
                   value={profile.email}
                   readOnly
-                  className="w-full rounded-lg border border-gray-200 bg-gray-50 pl-9 pr-4 py-2.5 text-sm text-gray-400 outline-none cursor-not-allowed"
+                  className="w-full rounded-lg border border-gray-700 bg-gray-800/50 pl-9 pr-4 py-2.5 text-sm text-gray-500 outline-none cursor-not-allowed"
                 />
               </div>
             </div>
@@ -191,7 +191,7 @@ export default function SettingsPage() {
           <button
             type="submit"
             disabled={isSavingProfile}
-            className="cursor-pointer inline-flex items-center gap-2 rounded-lg bg-blue-600 px-6 py-2.5 text-sm font-bold text-white shadow-sm transition hover:bg-blue-700 active:scale-95 disabled:opacity-50"
+            className="cursor-pointer inline-flex items-center gap-2 rounded-lg bg-blue-600 px-6 py-2.5 text-sm font-bold text-white shadow-sm transition hover:bg-blue-500 active:scale-95 disabled:opacity-50"
           >
             {isSavingProfile ? <FiLoader className="animate-spin" /> : <FiSave />}
             {isSavingProfile ? "Saving..." : "Save Changes"}
@@ -200,18 +200,18 @@ export default function SettingsPage() {
       </section>
 
       {/* ── Security Section ── */}
-      <section className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
-        <div className="px-6 py-4 border-b border-gray-100 bg-gray-50/30">
-          <h2 className="text-lg font-bold text-gray-900 flex items-center gap-2">
+      <section className="bg-gray-900 rounded-xl shadow-md border border-gray-800 overflow-hidden">
+        <div className="px-6 py-4 border-b border-gray-800 bg-gray-900">
+          <h2 className="text-lg font-bold text-white flex items-center gap-2">
             <FiShield className="text-blue-500" /> Password Security
           </h2>
-          <p className="text-xs text-gray-500 mt-0.5">Ensure your account stays secure by using a strong password.</p>
+          <p className="text-xs text-gray-400 mt-0.5">Ensure your account stays secure by using a strong password.</p>
         </div>
 
         <form onSubmit={handleSavePassword} className="p-6 space-y-6">
           {passwordStatus.message && (
             <div className={`flex items-center gap-2 p-3 rounded-lg text-sm ${
-              passwordStatus.type === "success" ? "bg-green-50 text-green-700" : "bg-red-50 text-red-700"
+              passwordStatus.type === "success" ? "bg-green-900/30 text-green-400" : "bg-red-900/30 text-red-400"
             }`}>
               {passwordStatus.type === "success" ? <FiCheckCircle /> : <FiAlertCircle />}
               {passwordStatus.message}
@@ -228,7 +228,7 @@ export default function SettingsPage() {
                   value={passwords.currentPassword}
                   onChange={(e) => setPasswords({ ...passwords, currentPassword: e.target.value })}
                   placeholder="••••••••"
-                  className="w-full rounded-lg border border-gray-200 bg-white pl-9 pr-4 py-2.5 text-sm outline-none transition focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10 text-black"
+                  className="w-full rounded-lg border border-gray-700 bg-gray-800 pl-9 pr-4 py-2.5 text-sm outline-none transition focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10 text-white placeholder-gray-500"
                 />
               </div>
             </div>
@@ -242,7 +242,7 @@ export default function SettingsPage() {
                   value={passwords.newPassword}
                   onChange={(e) => setPasswords({ ...passwords, newPassword: e.target.value })}
                   placeholder="Minimum 6 characters"
-                  className="w-full rounded-lg border border-gray-200 bg-white pl-9 pr-4 py-2.5 text-sm outline-none transition focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10 text-black"
+                  className="w-full rounded-lg border border-gray-700 bg-gray-800 pl-9 pr-4 py-2.5 text-sm outline-none transition focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10 text-white placeholder-gray-500"
                 />
               </div>
             </div>
@@ -256,7 +256,7 @@ export default function SettingsPage() {
                   value={passwords.confirmPassword}
                   onChange={(e) => setPasswords({ ...passwords, confirmPassword: e.target.value })}
                   placeholder="Confirm your new password"
-                  className="w-full rounded-lg border border-gray-200 bg-white pl-9 pr-4 py-2.5 text-sm outline-none transition focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10 text-black"
+                  className="w-full rounded-lg border border-gray-700 bg-gray-800 pl-9 pr-4 py-2.5 text-sm outline-none transition focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10 text-white placeholder-gray-500"
                 />
               </div>
             </div>
@@ -265,7 +265,7 @@ export default function SettingsPage() {
           <button
             type="submit"
             disabled={isSavingPassword}
-            className="cursor-pointer inline-flex items-center gap-2 rounded-lg bg-gray-900 px-6 py-2.5 text-sm font-bold text-white shadow-sm transition hover:bg-black active:scale-95 disabled:opacity-50"
+            className="cursor-pointer inline-flex items-center gap-2 rounded-lg bg-gray-800 px-6 py-2.5 text-sm font-bold text-white shadow-sm transition hover:bg-gray-700 active:scale-95 disabled:opacity-50"
           >
             {isSavingPassword ? <FiLoader className="animate-spin" /> : <FiShield />}
             {isSavingPassword ? "Updating..." : "Change Password"}

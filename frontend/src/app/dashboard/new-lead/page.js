@@ -88,14 +88,14 @@ export default function NewLeadPage() {
       {/* ── Back Link ── */}
       <Link 
         href="/dashboard/leads" 
-        className="inline-flex items-center gap-2 text-sm text-gray-500 hover:text-blue-600 transition-colors mb-6"
+        className="inline-flex items-center gap-2 text-sm text-gray-400 hover:text-white transition-colors mb-6"
       >
         <FiArrowLeft />
         Back to All Leads
       </Link>
 
       {/* ── Form Card ── */}
-      <div className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
+      <div className="bg-gray-900 rounded-2xl shadow-md border border-gray-800 overflow-hidden">
         
         {/* Card Header (Optional visual touch) */}
         <div className="h-2 bg-blue-600 w-full" />
@@ -106,8 +106,8 @@ export default function NewLeadPage() {
           {status.message && (
             <div className={`flex items-center gap-3 p-4 rounded-xl text-sm ${
               status.type === "success" 
-                ? "bg-green-50 text-green-700 border border-green-100" 
-                : "bg-red-50 text-red-700 border border-red-100"
+                ? "bg-green-900/30 text-green-400 border border-green-800/50" 
+                : "bg-red-900/30 text-red-400 border border-red-800/50"
             }`}>
               {status.type === "success" ? <FiCheckCircle className="flex-shrink-0" /> : <FiAlertCircle className="flex-shrink-0" />}
               {status.message}
@@ -117,7 +117,7 @@ export default function NewLeadPage() {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             {/* Name */}
             <div className="space-y-1.5">
-              <label htmlFor="name" className="text-sm font-semibold text-gray-700 flex items-center gap-2">
+              <label htmlFor="name" className="text-sm font-semibold text-gray-300 flex items-center gap-2">
                 <FiUser className="text-gray-400" /> Full Name
               </label>
               <input
@@ -128,13 +128,13 @@ export default function NewLeadPage() {
                 placeholder="e.g. John Doe"
                 value={formData.name}
                 onChange={handleChange}
-                className="w-full rounded-xl border border-gray-200 bg-white px-4 py-2.5 text-sm outline-none transition focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10 placeholder:text-gray-300 text-gray-600"
+                className="w-full rounded-xl border border-gray-700 bg-gray-800 px-4 py-2.5 text-sm outline-none transition focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10 placeholder:text-gray-500 text-white"
               />
             </div>
 
             {/* Email */}
             <div className="space-y-1.5">
-              <label htmlFor="email" className="text-sm font-semibold text-gray-700 flex items-center gap-2">
+              <label htmlFor="email" className="text-sm font-semibold text-gray-300 flex items-center gap-2">
                 <FiMail className="text-gray-400" /> Email Address
               </label>
               <input
@@ -145,14 +145,14 @@ export default function NewLeadPage() {
                 placeholder="john@example.com"
                 value={formData.email}
                 onChange={handleChange}
-                className="w-full rounded-xl border border-gray-200 bg-white px-4 py-2.5 text-sm outline-none transition focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10 placeholder:text-gray-300 text-gray-600"
+                className="w-full rounded-xl border border-gray-700 bg-gray-800 px-4 py-2.5 text-sm outline-none transition focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10 placeholder:text-gray-500 text-white"
               />
             </div>
           </div>
 
           {/* Source */}
           <div className="space-y-1.5">
-            <label htmlFor="source" className="text-sm font-semibold text-gray-700 flex items-center gap-2">
+            <label htmlFor="source" className="text-sm font-semibold text-gray-300 flex items-center gap-2">
               <FiGlobe className="text-gray-400" /> Lead Source
             </label>
             <select
@@ -160,7 +160,7 @@ export default function NewLeadPage() {
               name="source"
               value={formData.source}
               onChange={handleChange}
-              className="w-full rounded-xl border border-gray-200 bg-white px-4 py-2.5 text-sm outline-none transition focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10 appearance-none cursor-pointer text-gray-600"
+              className="w-full rounded-xl border border-gray-700 bg-gray-800 px-4 py-2.5 text-sm outline-none transition focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10 appearance-none cursor-pointer text-white"
             >
               <option value="Manual Entry">Manual Entry</option>
               <option value="Website">Website</option>
@@ -173,7 +173,7 @@ export default function NewLeadPage() {
 
           {/* Message */}
           <div className="space-y-1.5">
-            <label htmlFor="message" className="text-sm font-semibold text-gray-700 flex items-center gap-2">
+            <label htmlFor="message" className="text-sm font-semibold text-gray-300 flex items-center gap-2">
               <FiMessageSquare className="text-gray-400" /> Initial Note / Message
             </label>
             <textarea
@@ -184,7 +184,7 @@ export default function NewLeadPage() {
               placeholder="Tell us more about this lead..."
               value={formData.message}
               onChange={handleChange}
-              className="w-full rounded-xl border border-gray-200 bg-white px-4 py-2.5 text-sm outline-none transition focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10 placeholder:text-gray-300 resize-none text-gray-600"
+              className="w-full rounded-xl border border-gray-700 bg-gray-800 px-4 py-2.5 text-sm outline-none transition focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10 placeholder:text-gray-500 resize-none text-white"
             />
           </div>
 
@@ -195,7 +195,7 @@ export default function NewLeadPage() {
             className={`cursor-pointer w-full flex items-center justify-center gap-2 rounded-xl py-3 text-sm font-bold text-white transition-all transform active:scale-[0.98] ${
               loading 
                 ? "bg-blue-400 cursor-not-allowed" 
-                : "bg-blue-600 hover:bg-blue-700 hover:shadow-lg hover:shadow-blue-500/20"
+                : "bg-blue-600 hover:bg-blue-500 hover:shadow-lg hover:shadow-blue-500/20"
             }`}
           >
             {loading ? (
