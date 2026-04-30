@@ -22,16 +22,16 @@ export default function ConfirmModal({
       />
 
       {/* Modal Box */}
-      <div className="relative w-full max-w-md transform overflow-hidden rounded-2xl bg-white p-6 shadow-2xl transition-all animate-in zoom-in-95 duration-200">
+      <div className="relative w-full max-w-md transform overflow-hidden rounded-2xl bg-gray-900 border border-gray-800 p-6 shadow-2xl transition-all animate-in zoom-in-95 duration-200">
         <div className="flex items-start gap-4">
-          <div className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full bg-red-50">
-            <FiAlertTriangle className="h-5 w-5 text-red-600" />
+          <div className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full bg-red-900/30">
+            <FiAlertTriangle className="h-5 w-5 text-red-400" />
           </div>
           <div className="flex-1">
-            <h3 className="text-lg font-bold text-gray-900 leading-6">
+            <h3 className="text-lg font-bold text-white leading-6">
               {title}
             </h3>
-            <p className="mt-2 text-sm text-gray-600">
+            <p className="mt-2 text-sm text-gray-400">
               {description}
             </p>
           </div>
@@ -42,7 +42,7 @@ export default function ConfirmModal({
             type="button"
             onClick={onClose}
             disabled={isLoading}
-            className="cursor-pointer rounded-xl border border-gray-200 bg-white px-4 py-2 text-sm font-semibold text-gray-700 transition hover:bg-gray-50 active:scale-95 disabled:opacity-50"
+            className="cursor-pointer rounded-xl border border-gray-700 bg-gray-800 px-4 py-2 text-sm font-semibold text-gray-300 transition hover:bg-gray-700 active:scale-95 disabled:opacity-50"
           >
             Cancel
           </button>
@@ -50,7 +50,7 @@ export default function ConfirmModal({
             type="button"
             onClick={onConfirm}
             disabled={isLoading}
-            className="cursor-pointer flex items-center justify-center min-w-[90px] rounded-xl bg-red-600 px-4 py-2 text-sm font-semibold text-white shadow-md transition hover:bg-red-700 active:scale-95 disabled:opacity-50"
+            className="cursor-pointer flex items-center justify-center min-w-[90px] rounded-xl bg-red-600 px-4 py-2 text-sm font-semibold text-white shadow-md transition hover:bg-red-500 active:scale-95 disabled:opacity-50"
           >
             {isLoading ? (
               <FiLoader className="h-4 w-4 animate-spin" />
