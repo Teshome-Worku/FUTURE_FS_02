@@ -1,99 +1,78 @@
 # 🚀 LeadFlow CRM
 
-A modern **Client Lead Management System (Mini CRM)** built to help businesses capture, manage, and convert leads efficiently.
-
-This system simulates how real agencies and freelancers track potential clients from first contact to conversion.
-
----
-
-## 📌 Overview
-
-LeadFlow CRM is designed as a **SaaS-style application** that allows admins to:
-
-* Capture leads from website contact forms
-* Track lead status across a sales pipeline
-* Manage and organize client interactions
-* Prepare leads for conversion into real clients
+A full-stack Client Lead Management System designed to help businesses track, manage, and convert leads efficiently. Built with modern web technologies, this mini-CRM features a premium SaaS-style interface and secure backend architecture to streamline sales pipelines from first contact to successful conversion.
 
 ---
 
 ## ✨ Features
 
 ### ✅ Core Features
+- **Lead Management:** Create, view, update, and delete leads seamlessly.
+- **Pipeline Tracking:** Dynamic status tracking across a dedicated sales workflow (New → Contacted → Converted).
+- **Follow-Up Scheduling:** Assign and track critical follow-up dates to never miss an opportunity.
+- **Activity Notes:** Comprehensive internal note-taking system attached to individual leads.
+- **Secure Authentication:** JWT-based secure admin authentication protecting all dashboard routes.
 
-* Create new leads (name, email, message, source)
-* Admin login with JWT authentication
-* View all leads in a structured dashboard
-* Lead detail page with:
-  * Status updates (`new`, `contacted`, `converted`)
-  * Follow-up date scheduling
-  * Notes timeline and note creation
-* Update lead status:
+### 🎨 UI/UX Features
+- **Premium SaaS Aesthetics:** Polished, immersive dark theme with refined typography and spacing.
+- **Fully Responsive:** Flawless experience across desktop, tablet, and mobile devices.
+- **Advanced Navigation:** Intuitive sidebar and header system for quick access to all modules.
+- **Search & Filtering:** Real-time search and status-based filtering on the main leads pipeline.
+- **Custom Modals:** Custom confirmation dialogs replacing native browser alerts for destructive actions.
+- **Empty States & Loading:** Delightful empty states and loading indicators throughout the app.
 
-  * `new`
-  * `contacted`
-  * `converted`
-* Timestamp tracking (`createdAt`, `updatedAt`)
-
-### 🔄 CRM Workflow
-
-```
-New Lead → Contacted → Converted
-```
+### 📊 Dashboard
+- **Total Leads Overview:** Key performance indicator cards for instant metrics.
+- **Analytics Charts:** Visual representation of lead intake over time and status distribution (Bar and Pie charts).
+- **Recent Leads Pipeline:** Quick access to the most recently added or updated leads.
 
 ---
 
 ## 🛠️ Tech Stack
 
-### Backend
+**Frontend:**
+- [Next.js](https://nextjs.org/) (App Router)
+- React
+- Tailwind CSS
+- Recharts (for Data Visualization)
+- React Icons
 
-* Node.js
-* Express.js
-* JWT authentication middleware
+**Backend:**
+- Node.js
+- Express.js
 
-### Database
+**Database:**
+- MongoDB (Mongoose ODM)
 
-* MongoDB (Mongoose)
-
-### Frontend
-
-* Next.js (App Router)
-* React
-* Tailwind CSS
-
-### Tools
-
-* REST API
-* Postman / Thunder Client (for testing)
+**Authentication & Security:**
+- JWT (JSON Web Tokens)
+- bcryptjs (Password Hashing)
 
 ---
 
 ## 📁 Project Structure
 
-```
-leadflow-crm/
-│
+```text
+CRM-System/
 ├── backend/
-│   ├── config/        # Database connection
-│   ├── controllers/   # Business logic
-│   ├── models/        # Mongoose schemas
-│   ├── routes/        # API routes
-│   ├── middleware/    # Auth middleware
-│   └── server.js      # Entry point
+│   ├── config/          # Database configuration
+│   ├── controllers/     # API request handlers
+│   ├── middleware/      # Auth & error handling middlewares
+│   ├── models/          # Mongoose database schemas
+│   ├── routes/          # Express API routes
+│   └── server.js        # Backend entry point
 │
 ├── frontend/
+│   ├── public/          # Static assets
 │   ├── src/
-│   │   ├── app/                   # Next.js routes/pages
-│   │   │   ├── login/             # Login page
-│   │   │   └── dashboard/         # Dashboard + lead detail pages
-│   │   ├── components/            # Reusable UI components
-│   │   └── services/              # API helper functions
-│   ├── public/                    # Static assets
+│   │   ├── app/         # Next.js App Router (pages & layouts)
+│   │   ├── components/  # Reusable UI components (Sidebar, Header, Modals)
+│   │   ├── context/     # React Context providers (HeaderContext)
+│   │   └── services/    # API integration services
+│   ├── tailwind.config.js
 │   └── package.json
 │
-├── docs/
-│   └── schema.md      # Database design
-│
+├── screenshots/         # Application previews
 └── README.md
 ```
 
@@ -102,146 +81,94 @@ leadflow-crm/
 ## ⚙️ Setup Instructions
 
 ### 1. Clone the repository
-
+```bash
+git clone https://github.com/Teshome-Worku/FUTURE_FS_02.git
+cd FUTURE_FS_02
 ```
-git clone https://github.com/your-username/leadflow-crm.git
-cd leadflow-crm
-```
 
----
-
-### 2. Install dependencies (backend + frontend)
-
-```
+### 2. Install dependencies
+Install dependencies for both backend and frontend:
+```bash
+# Backend
 cd backend
 npm install
 
+# Frontend
 cd ../frontend
 npm install
 ```
 
----
-
-### 3. Configure environment variables
-
-Create a `.env` file inside `/backend`:
-
-```
+### 3. Environment Variables
+Create a `.env` file in the **backend** directory:
+```env
 PORT=5000
-MONGO_URI=your_mongodb_connection_string
-JWT_SECRET=your_secret_key
+MONGO_URI=your_mongo_uri
+JWT_SECRET=your_secret
 ```
 
-Create a `.env` file inside `/frontend`:
-
-```
+Create a `.env.local` file in the **frontend** directory:
+```env
 NEXT_PUBLIC_API_URL=http://localhost:5000/api
 ```
 
----
-
-### 4. Run backend server
-
-```
+### 4. Run the Backend Server
+```bash
 cd backend
 npm run dev
+# Server runs on http://localhost:5000
 ```
 
-Server will run on:
-
-```
-http://localhost:5000
-```
-
----
-
-### 5. Run frontend app
-
-```
+### 5. Run the Frontend Client
+```bash
 cd frontend
 npm run dev
-```
-
-Frontend will run on:
-
-```
-http://localhost:3000
+# Application runs on http://localhost:3000
 ```
 
 ---
 
-## 📡 API Endpoints
+## 🔐 Demo Access
 
-### ➕ Create Lead
+To explore the dashboard and features locally, use the following credentials:
 
-```
-POST /api/leads
-```
-
-### 📥 Get All Leads
-
-```
-GET /api/leads
-```
-
-### 🔄 Update Lead Status
-
-```
-PUT /api/leads/:id/status
-```
-
-### 📝 Notes
-
-```
-GET /api/notes/:leadId
-POST /api/notes/:leadId
-```
-
-### 🔐 Auth
-
-```
-POST /api/auth/register
-POST /api/auth/login
-```
+- **Email:** `tesheworku1251gmail.com`
+- **Password:** `123123`
 
 ---
 
-## 🧠 Real-World Use Case
+## 📸 Preview
 
-This CRM system reflects how businesses:
+### Landing Page
+![Landing Page](./screenshots/landing.png)
 
-* Handle incoming client inquiries
-* Track communication progress
-* Improve conversion rates through follow-ups
+### Login Page
+![Login Page](./screenshots/login.png)
 
----
+### Dashboard
+![Dashboard](./screenshots/dashboard.png)
 
-## 🚧 Upcoming Features
+### Leads Pipeline
+![Leads Pipeline](./screenshots/leads.png)
 
-* 🔍 Search & filtering
-* 📊 Analytics dashboard
-* 📅 Follow-up reminders
+### Lead Details
+![Lead Details](./screenshots/leadDetail.png)
 
----
+### Add New Lead
+![Add New Lead](./screenshots/addLead.png)
 
-## 💼 Why This Project Matters
+### Settings
+![Settings](./screenshots/settings.png)
 
-This project demonstrates:
 
-* Full-stack development skills
-* RESTful API design
-* Real-world business logic implementation
-* Scalable backend architecture
 
 ---
 
-## 📢 Author
+## 💡 What I Learned
 
-Developed by **Teshome Worku**
-Aspiring Full Stack Developer
+Building LeadFlow CRM was an incredible journey that solidified my understanding of end-to-end web development:
 
----
-
-## ⭐ Final Note
-
-> “This is not just a project — it’s a system designed to solve real business problems.”
+- **Building Full-Stack CRUD Systems:** Integrating a robust Node/Express backend with a modern Next.js frontend.
+- **Designing Real-World Workflows:** Translating business requirements into technical features (lead tracking, status pipelines).
+- **Authentication & Secure APIs:** Implementing robust JWT authentication, password hashing, and protecting backend routes.
+- **UI/UX Improvements for SaaS Products:** Crafting a premium, cohesive design system using Tailwind CSS with a strong focus on responsiveness, hover states, and micro-interactions.
+- **State Management:** Using React Context effectively for dynamic UI updates across the application.
