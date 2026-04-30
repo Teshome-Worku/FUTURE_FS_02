@@ -19,9 +19,9 @@ const isValidToken = (token) => {
 // ─── Status badge config ──────────────────────────────────────────────────────
 
 const STATUS_BADGE = {
-  new:       "bg-gray-100 text-gray-600",
-  contacted: "bg-blue-100 text-blue-700",
-  converted: "bg-green-100 text-green-700",
+  new:       "bg-gray-800 text-gray-400",
+  contacted: "bg-blue-900/30 text-blue-400",
+  converted: "bg-green-900/30 text-green-400",
 };
 
 // ─── Leads Page ───────────────────────────────────────────────────────────────
@@ -140,7 +140,7 @@ export default function LeadsPage() {
             placeholder="Search leads..."
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            className="w-full rounded-lg border border-gray-200 bg-white py-2 pl-9 pr-4 text-sm text-gray-700 outline-none transition focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20"
+            className="w-full rounded-lg border border-gray-700 bg-gray-800 py-2 pl-9 pr-4 text-sm text-white placeholder-gray-500 outline-none transition focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20"
           />
         </div>
 
@@ -150,7 +150,7 @@ export default function LeadsPage() {
           <select
             value={selectedStatus}
             onChange={(e) => setSelectedStatus(e.target.value)}
-            className="w-full md:w-auto rounded-lg border border-gray-200 bg-white px-3 py-2 text-sm text-gray-700 outline-none transition focus:border-blue-500"
+            className="w-full md:w-auto rounded-lg border border-gray-700 bg-gray-800 px-3 py-2 text-sm text-white outline-none transition focus:border-blue-500"
           >
             <option value="All">All Statuses</option>
             <option value="new">New</option>
@@ -162,7 +162,7 @@ export default function LeadsPage() {
 
       {/* ── Loading ── */}
       {loading && (
-        <div className="flex items-center gap-2 rounded-xl border border-gray-200 bg-white p-6 text-sm text-gray-500">
+        <div className="flex items-center gap-2 rounded-xl border border-gray-800 bg-gray-900 p-6 text-sm text-gray-400">
           <FiLoader className="h-4 w-4 animate-spin" />
           Loading leads…
         </div>
@@ -170,17 +170,17 @@ export default function LeadsPage() {
 
       {/* ── Error ── */}
       {!loading && error && (
-        <div className="rounded-xl border border-red-200 bg-red-50 p-5 text-sm text-red-600">
+        <div className="rounded-xl border border-red-800/50 bg-red-900/30 p-5 text-sm text-red-400">
           {error}
         </div>
       )}
 
       {/* ── Empty State (No Leads At All) ── */}
       {!loading && !error && leads.length === 0 && (
-        <div className="flex flex-col items-center justify-center gap-3 rounded-xl border border-gray-200 bg-white py-16 text-center">
-          <FiInbox className="h-10 w-10 text-gray-300" />
-          <p className="text-sm font-medium text-gray-500">No leads yet</p>
-          <p className="text-xs text-gray-400">
+        <div className="flex flex-col items-center justify-center gap-3 rounded-xl border border-gray-800 bg-gray-900 py-16 text-center">
+          <FiInbox className="h-10 w-10 text-gray-700" />
+          <p className="text-sm font-medium text-gray-400">No leads yet</p>
+          <p className="text-xs text-gray-500">
             Click <span className="font-semibold text-blue-600">
               <Link 
               href="/dashboard/new-lead"
@@ -193,13 +193,13 @@ export default function LeadsPage() {
 
       {/* ── Table / Filtered Results ── */}
       {!loading && !error && leads.length > 0 && (
-        <div className="overflow-x-auto rounded-xl bg-white shadow-sm ring-1 ring-gray-200">
+        <div className="overflow-x-auto rounded-xl bg-gray-900 shadow-md border border-gray-800">
           <div className="min-w-[900px]">
-            <table className="w-full divide-y divide-gray-100">
+            <table className="w-full divide-y divide-gray-800">
 
               {/* ── Head ── */}
               <thead>
-                <tr className="bg-gray-50">
+                <tr className="bg-gray-800/50">
                   {["Name", "Email", "Message", "Status", "Follow-Up", "Actions"].map((col) => (
                     <th
                       key={col}
@@ -213,15 +213,15 @@ export default function LeadsPage() {
               </thead>
 
               {/* ── Body ── */}
-              <tbody className="divide-y divide-gray-100">
+              <tbody className="divide-y divide-gray-800">
                 {filtered.length === 0 ? (
                   <tr>
                     <td
                       colSpan={6}
-                      className="px-5 py-12 text-center text-sm text-gray-500"
+                      className="px-5 py-12 text-center text-sm text-gray-400"
                     >
                       <div className="flex flex-col items-center gap-2">
-                        <FiSearch className="h-6 w-6 text-gray-300" />
+                        <FiSearch className="h-6 w-6 text-gray-700" />
                         <p>No leads found matching your criteria.</p>
                         <button 
                           onClick={() => { setSearch(""); setSelectedStatus("All"); }}
@@ -236,25 +236,25 @@ export default function LeadsPage() {
                   filtered.map((lead) => (
                     <tr
                       key={lead._id}
-                      className="transition hover:bg-gray-50"
+                      className="transition hover:bg-gray-800/50"
                     >
                       {/* Name */}
                       <td className="whitespace-nowrap px-5 py-4">
-                        <span className="text-sm font-semibold text-gray-900">
+                        <span className="text-sm font-semibold text-white">
                           {lead.name || "—"}
                         </span>
                       </td>
 
                       {/* Email */}
                       <td className="whitespace-nowrap px-5 py-4">
-                        <span className="cursor-pointer hover:text-blue-500 text-xs text-gray-500 transition-colors">
+                        <span className="cursor-pointer hover:text-blue-400 text-xs text-gray-400 transition-colors">
                           {lead.email || "—"}
                         </span>
                       </td>
 
                       {/* Message (truncated) */}
                       <td className="px-5 py-4 max-w-[200px]">
-                        <span className="block truncate text-xs text-gray-500 overflow-hidden text-ellipsis whitespace-nowrap">
+                        <span className="block truncate text-xs text-gray-400 overflow-hidden text-ellipsis whitespace-nowrap">
                           {lead.message || "—"}
                         </span>
                       </td>
@@ -263,7 +263,7 @@ export default function LeadsPage() {
                     <td className="whitespace-nowrap px-5 py-4">
                       <span
                         className={`inline-flex rounded-full px-2.5 py-1 text-xs font-medium capitalize ${
-                          STATUS_BADGE[lead.status] ?? "bg-gray-100 text-gray-600"
+                          STATUS_BADGE[lead.status] ?? "bg-gray-800 text-gray-400"
                         }`}
                       >
                         {lead.status || "unknown"}
@@ -287,11 +287,11 @@ export default function LeadsPage() {
                     <td className="whitespace-nowrap px-5 py-4">
                       <div className="flex items-center gap-2">
 
-                        {/* View */}
+                    {/* View */}
                         <Link
                           href={`/dashboard/leads/${lead._id}`}
                           title="View lead"
-                          className="inline-flex items-center justify-center rounded-lg p-2 text-gray-400 transition hover:bg-gray-100 hover:text-gray-700"
+                          className="inline-flex items-center justify-center rounded-lg p-2 text-gray-500 transition hover:bg-gray-700 hover:text-white"
                         >
                           <FiEye className="h-4 w-4" />
                         </Link>
@@ -301,7 +301,7 @@ export default function LeadsPage() {
                           title="Delete lead"
                           disabled={isDeleting && leadToDelete === lead._id}
                           onClick={() => handleDeleteClick(lead._id)}
-                          className="cursor-pointer inline-flex items-center justify-center rounded-lg p-2 text-gray-400 transition hover:bg-red-50 hover:text-red-500 disabled:opacity-40"
+                          className="cursor-pointer inline-flex items-center justify-center rounded-lg p-2 text-gray-500 transition hover:bg-red-900/30 hover:text-red-400 disabled:opacity-40"
                         >
                           <FiTrash2 className="h-4 w-4" />
                         </button>

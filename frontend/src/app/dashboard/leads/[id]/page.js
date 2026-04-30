@@ -27,9 +27,9 @@ const isValidToken = (token) => {
 // ─── Status badge styling ─────────────────────────────────────────────────────
 
 const STATUS_CONFIG = {
-  new:       { label: "New",       color: "bg-gray-100 text-gray-600 border-gray-200" },
-  contacted: { label: "Contacted", color: "bg-blue-50 text-blue-700 border-blue-100" },
-  converted: { label: "Converted", color: "bg-green-50 text-green-700 border-green-100" },
+  new:       { label: "New",       color: "bg-gray-800 text-gray-400 border-gray-700" },
+  contacted: { label: "Contacted", color: "bg-blue-900/30 text-blue-400 border-blue-800/50" },
+  converted: { label: "Converted", color: "bg-green-900/30 text-green-400 border-green-800/50" },
 };
 
 export default function LeadDetailPage() {
@@ -207,7 +207,7 @@ export default function LeadDetailPage() {
 
   if (loading) {
     return (
-      <div className="flex h-64 items-center justify-center rounded-xl bg-white shadow-sm ring-1 ring-gray-200">
+      <div className="flex h-64 items-center justify-center rounded-xl bg-gray-900 shadow-md border border-gray-800">
         <FiLoader className="h-6 w-6 animate-spin text-blue-600" />
       </div>
     );
@@ -215,7 +215,7 @@ export default function LeadDetailPage() {
 
   if (error) {
     return (
-      <div className="flex items-center gap-3 rounded-xl border border-red-200 bg-red-50 p-6 text-sm text-red-600 shadow-sm">
+      <div className="flex items-center gap-3 rounded-xl border border-red-800/50 bg-red-900/30 p-6 text-sm text-red-400 shadow-sm">
         <FiAlertCircle className="h-5 w-5" />
         {error}
       </div>
@@ -231,17 +231,17 @@ export default function LeadDetailPage() {
         <div className="lg:col-span-2 space-y-6">
           
           {/* Lead Info Card */}
-          <section className="rounded-xl bg-white p-6 shadow-sm ring-1 ring-gray-200 overflow-hidden">
+          <section className="rounded-xl bg-gray-900 p-6 shadow-md border border-gray-800 overflow-hidden">
             <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-4">
               <div className="space-y-2 min-w-0 flex-1">
-                <h2 className="text-xl sm:text-2xl font-bold text-gray-900 break-words">{lead.name}</h2>
+                <h2 className="text-xl sm:text-2xl font-bold text-white break-words">{lead.name}</h2>
                 <div className="flex flex-wrap items-center gap-y-2 gap-x-4">
-                  <p className="flex items-center gap-1.5 text-sm text-gray-500">
-                    <FiMail className="text-gray-400 flex-shrink-0" /> 
+                  <p className="flex items-center gap-1.5 text-sm text-gray-400">
+                    <FiMail className="text-gray-500 flex-shrink-0" /> 
                     <span className="truncate">{lead.email}</span>
                   </p>
-                  <p className="flex items-center gap-1.5 text-sm text-gray-500">
-                    <FiGlobe className="text-gray-400 flex-shrink-0" /> 
+                  <p className="flex items-center gap-1.5 text-sm text-gray-400">
+                    <FiGlobe className="text-gray-500 flex-shrink-0" /> 
                     <span className="truncate">{lead.source || "Manual Entry"}</span>
                   </p>
                 </div>
@@ -253,11 +253,11 @@ export default function LeadDetailPage() {
           </section>
 
           {/* Message Card */}
-          <section className="rounded-xl bg-white p-6 shadow-sm ring-1 ring-gray-200">
-            <h3 className="mb-4 flex items-center gap-2 text-sm font-semibold text-gray-900">
-              <FiMessageSquare className="text-gray-400" /> Message
+          <section className="rounded-xl bg-gray-900 p-6 shadow-md border border-gray-800">
+            <h3 className="mb-4 flex items-center gap-2 text-sm font-semibold text-white">
+              <FiMessageSquare className="text-gray-500" /> Message
             </h3>
-            <div className="h-40 overflow-y-auto rounded-lg bg-gray-50 p-4 text-sm text-gray-700 ring-1 ring-inset ring-gray-100">
+            <div className="h-40 overflow-y-auto rounded-lg bg-gray-800/50 border border-gray-800 p-4 text-sm text-gray-300">
               <p className="whitespace-pre-wrap break-words italic">
                 "{lead.message || "No message provided for this lead."}"
               </p>
@@ -265,20 +265,20 @@ export default function LeadDetailPage() {
           </section>
 
           {/* Status & Follow-up Grid Card */}
-          <section className="rounded-xl bg-white p-6 shadow-sm ring-1 ring-gray-200">
+          <section className="rounded-xl bg-gray-900 p-6 shadow-md border border-gray-800">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
               
               {/* Status Update */}
               <div className="space-y-4">
-                <h3 className="flex items-center gap-2 text-sm font-semibold text-gray-900">
-                  <FiActivity className="text-gray-400" /> Update Status
+                <h3 className="flex items-center gap-2 text-sm font-semibold text-white">
+                  <FiActivity className="text-gray-500" /> Update Status
                 </h3>
                 <div className="relative">
                   <select 
                     value={lead.status}
                     onChange={handleStatusChange}
                     disabled={updatingStatus}
-                    className="w-full appearance-none rounded-lg border border-gray-200 bg-white px-4 py-2.5 text-sm font-medium text-gray-700 outline-none transition focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10 disabled:opacity-50"
+                    className="w-full appearance-none rounded-lg border border-gray-700 bg-gray-800 px-4 py-2.5 text-sm font-medium text-white outline-none transition focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10 disabled:opacity-50"
                   >
                     <option value="new">New Lead</option>
                     <option value="contacted">Contacted</option>
@@ -292,20 +292,20 @@ export default function LeadDetailPage() {
 
               {/* Follow-up Date */}
               <div className="space-y-4">
-                <h3 className="flex items-center gap-2 text-sm font-semibold text-gray-900">
-                  <FiCalendar className="text-gray-400" /> Follow-Up Schedule
+                <h3 className="flex items-center gap-2 text-sm font-semibold text-white">
+                  <FiCalendar className="text-gray-500" /> Follow-Up Schedule
                 </h3>
                 <form onSubmit={handleSetFollowUpDate} className="flex items-center gap-2">
                   <input 
                     type="date"
                     value={followUpDateInput}
                     onChange={(e) => setFollowUpDateInput(e.target.value)}
-                    className="flex-1 rounded-lg border border-gray-200 px-3 py-2 text-sm outline-none transition focus:border-blue-500"
+                    className="flex-1 rounded-lg border border-gray-700 bg-gray-800 px-3 py-2 text-sm text-white outline-none transition focus:border-blue-500"
                   />
                   <button 
                     type="submit"
                     disabled={updatingFollowUpDate || !followUpDateInput}
-                    className="cursor-pointer rounded-lg bg-gray-900 px-4 py-2 text-xs font-bold text-white transition hover:bg-gray-800 disabled:opacity-50"
+                    className="cursor-pointer rounded-lg bg-gray-800 border border-gray-700 px-4 py-2 text-xs font-bold text-white transition hover:bg-gray-700 disabled:opacity-50"
                   >
                     {updatingFollowUpDate ? "Saving..." : "Set Date"}
                   </button>
@@ -324,8 +324,8 @@ export default function LeadDetailPage() {
 
         {/* ── Column Right (Notes) ── */}
         <div className="space-y-6">
-          <section className="rounded-xl bg-white p-6 shadow-sm ring-1 ring-gray-200 flex flex-col h-full">
-            <h3 className="mb-4 text-sm font-semibold text-gray-900">Activity Notes</h3>
+          <section className="rounded-xl bg-gray-900 p-6 shadow-md border border-gray-800 flex flex-col h-full">
+            <h3 className="mb-4 text-sm font-semibold text-white">Activity Notes</h3>
             
             {/* Note input */}
             <form onSubmit={handleAddNote} className="mb-6 space-y-3">
@@ -333,12 +333,12 @@ export default function LeadDetailPage() {
                 value={noteInput}
                 onChange={(e) => setNoteInput(e.target.value)}
                 placeholder="Write an internal note..."
-                className="w-full min-h-[100px] rounded-lg border border-gray-200 p-3 text-sm text-gray-700 outline-none transition focus:border-blue-500 placeholder:text-gray-300 resize-none"
+                className="w-full min-h-[100px] rounded-lg border border-gray-700 bg-gray-800 p-3 text-sm text-white outline-none transition focus:border-blue-500 placeholder:text-gray-500 resize-none"
               />
               <button 
                 type="submit"
                 disabled={addingNote || !noteInput.trim()}
-                className="cursor-pointer w-full flex items-center justify-center gap-2 rounded-lg bg-blue-600 py-2.5 text-sm font-bold text-white transition hover:bg-blue-700 disabled:opacity-50"
+                className="cursor-pointer w-full flex items-center justify-center gap-2 rounded-lg bg-blue-600 py-2.5 text-sm font-bold text-white transition hover:bg-blue-500 disabled:opacity-50"
               >
                 {addingNote ? <FiLoader className="animate-spin" /> : <FiPlus />} Add Note
               </button>
@@ -347,12 +347,12 @@ export default function LeadDetailPage() {
             {/* Notes list */}
             <div className="flex-1 space-y-4 overflow-y-auto max-h-[400px] pr-2 custom-scrollbar">
               {notes.length === 0 ? (
-                <p className="text-center text-xs text-gray-400 py-8 italic">No notes added yet.</p>
+                <p className="text-center text-xs text-gray-500 py-8 italic">No notes added yet.</p>
               ) : (
                 notes.map((note) => (
-                  <div key={note._id} className="rounded-lg bg-gray-50 p-4 border border-gray-100 shadow-xs">
-                    <p className="text-sm text-gray-800 leading-relaxed">{note.content}</p>
-                    <p className="mt-2 text-[10px] font-medium text-gray-400 uppercase tracking-wider">
+                  <div key={note._id} className="rounded-lg bg-gray-800/50 p-4 border border-gray-800 shadow-xs">
+                    <p className="text-sm text-gray-300 leading-relaxed">{note.content}</p>
+                    <p className="mt-2 text-[10px] font-medium text-gray-500 uppercase tracking-wider">
                       {new Date(note.createdAt).toLocaleString(undefined, {
                         dateStyle: "medium",
                         timeStyle: "short",
