@@ -15,7 +15,7 @@ connectDB();
 
 // middleware
 app.use(cors({
-    origin: ["http://localhost:3000", "https://future-crm-frontend.vercel.app"],
+    origin: ["http://localhost:3000", "https://leadflow-crm-rouge-delta.vercel.app"],
     credentials: true
 }));
 app.use(express.json());
