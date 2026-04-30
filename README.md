@@ -131,8 +131,8 @@ npm run dev
 
 To explore the dashboard and features locally, use the following credentials:
 
-- **Email:** `tesheworku1251gmail.com`
-- **Password:** `123123`
+- **Email:** `admin123@gmail.com`
+- **Password:** `admin123`
 
 ---
 

@@ -193,7 +193,7 @@ export default function LoginPage() {
             >
               {loading ? <LoadingIndicator /> : "Sign In"}
             </button>
-            <p className="text-center text-xs text-gray-600 mt-3">Admin: [tesheworku1251@gmail.com]/123123</p>
+           
             
           </form>
 
