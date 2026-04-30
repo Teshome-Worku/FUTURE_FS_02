@@ -36,7 +36,7 @@ function NavItem({ item, isActive, onClick }) {
   const Icon = item.icon;
   const base    = "flex items-center gap-3 rounded-md px-3 py-2 text-sm font-medium transition-all duration-150";
   const active  = "bg-gray-800 text-white";
-  const inactive = "text-gray-300 hover:bg-gray-800 hover:text-white";
+  const inactive = "text-gray-400 hover:bg-gray-800 hover:text-white";
 
   return (
     <li>
@@ -83,7 +83,7 @@ const [user, setUser] = useState({
 
   return (
     <aside className={`
-      fixed inset-y-0 left-0 z-40 w-64 bg-gray-900 transform transition-transform duration-300 flex flex-col h-full flex-shrink-0 text-white
+      fixed inset-y-0 left-0 z-40 w-64 bg-gray-950 border-r border-gray-800 transform transition-transform duration-300 flex flex-col h-full flex-shrink-0 text-white
       md:relative md:translate-x-0
       ${isOpen ? "translate-x-0 shadow-2xl" : "-translate-x-full"}
     `}>
@@ -136,7 +136,7 @@ const [user, setUser] = useState({
         </button>
 
         {/* Profile card */}
-        <div className="mt-2 flex items-center gap-3 rounded-lg bg-gray-800 px-3 py-3 border border-gray-700/50">
+        <div className="mt-2 flex items-center gap-3 rounded-lg bg-gray-800 px-3 py-3 border border-gray-700">
           <div className="flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-full bg-indigo-600 text-xs font-bold text-white shadow-inner">
             {user.name 
               ? user.name.split(" ").map(n => n[0]).join("").toUpperCase().slice(0, 2)

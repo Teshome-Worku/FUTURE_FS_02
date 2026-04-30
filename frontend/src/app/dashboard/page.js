@@ -39,9 +39,9 @@ const isValidToken = (token) => {
 // ─── Status badge colour map ──────────────────────────────────────────────────
 
 const STATUS_BADGE = {
-  new:       "bg-gray-100 text-gray-600",
-  contacted: "bg-blue-100 text-blue-700",
-  converted: "bg-green-100 text-green-700",
+  new:       "bg-gray-800 text-gray-400",
+  contacted: "bg-blue-900/30 text-blue-400",
+  converted: "bg-green-900/30 text-green-400",
 };
 
 // ─── Dashboard Page ───────────────────────────────────────────────────────────
@@ -105,25 +105,25 @@ export default function Dashboard() {
       title:  "Total Leads",
       value:  totalLeads,
       icon:   FiUsers,
-      accent: "bg-indigo-50 text-indigo-600",
+      accent: "bg-indigo-900/30 text-indigo-400",
     },
     {
       title:  "New Leads",
       value:  newLeads,
       icon:   FiUserPlus,
-      accent: "bg-blue-50 text-blue-600",
+      accent: "bg-blue-900/30 text-blue-400",
     },
     {
       title:  "Contacted",
       value:  contactedLeads,
       icon:   FiPhone,
-      accent: "bg-purple-50 text-purple-600",
+      accent: "bg-purple-900/30 text-purple-400",
     },
     {
       title:  "Converted",
       value:  convertedLeads,
       icon:   FiCheckCircle,
-      accent: "bg-emerald-50 text-emerald-600",
+      accent: "bg-emerald-900/30 text-emerald-400",
     },
   ];
 
@@ -187,11 +187,11 @@ export default function Dashboard() {
           return (
             <article
               key={card.title}
-              className="flex items-center justify-between rounded-xl bg-white p-5 shadow-sm ring-1 ring-gray-200 transition hover:shadow-md"
+              className="flex items-center justify-between rounded-xl bg-gray-900 p-5 shadow-md border border-gray-800 transition hover:shadow-lg hover:shadow-black/50"
             >
               <div>
-                <p className="text-sm font-medium text-gray-500">{card.title}</p>
-                <p className="mt-1 text-3xl font-bold text-gray-900">{card.value}</p>
+                <p className="text-sm font-medium text-gray-400">{card.title}</p>
+                <p className="mt-1 text-3xl font-bold text-white">{card.value}</p>
               </div>
               <span
                 className={`flex h-12 w-12 items-center justify-center rounded-xl ${card.accent}`}
@@ -208,11 +208,11 @@ export default function Dashboard() {
         <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
 
           {/* Bar chart — Leads Over Time */}
-          <div className="rounded-xl bg-white p-5 shadow-sm ring-1 ring-gray-200">
-            <h2 className="mb-4 text-sm font-semibold text-gray-700">Leads Overview</h2>
+          <div className="rounded-xl bg-gray-900 p-5 shadow-md border border-gray-800">
+            <h2 className="mb-4 text-sm font-semibold text-gray-300">Leads Overview</h2>
             <ResponsiveContainer width="100%" height={220}>
               <BarChart data={barData} margin={{ top: 0, right: 8, left: -16, bottom: 0 }}>
-                <CartesianGrid strokeDasharray="3 3" stroke="#f3f4f6" />
+                <CartesianGrid strokeDasharray="3 3" stroke="#374151" />
                 <XAxis
                   dataKey="date"
                   tick={{ fontSize: 11, fill: "#9ca3af" }}
@@ -228,8 +228,10 @@ export default function Dashboard() {
                 <Tooltip
                   contentStyle={{
                     borderRadius: "8px",
-                    border: "none",
-                    boxShadow: "0 4px 12px rgba(0,0,0,0.08)",
+                    border: "1px solid #1f2937",
+                    backgroundColor: "#111827",
+                    color: "#f3f4f6",
+                    boxShadow: "0 4px 12px rgba(0,0,0,0.5)",
                     fontSize: "12px",
                   }}
                 />
@@ -239,8 +241,8 @@ export default function Dashboard() {
           </div>
 
           {/* Pie chart — Status Distribution */}
-          <div className="rounded-xl bg-white p-5 shadow-sm ring-1 ring-gray-200">
-            <h2 className="mb-4 text-sm font-semibold text-gray-700">Lead Status Distribution</h2>
+          <div className="rounded-xl bg-gray-900 p-5 shadow-md border border-gray-800">
+            <h2 className="mb-4 text-sm font-semibold text-gray-300">Lead Status Distribution</h2>
             <ResponsiveContainer width="100%" height={220}>
               <PieChart>
                 <Pie
@@ -262,8 +264,10 @@ export default function Dashboard() {
                 <Tooltip
                   contentStyle={{
                     borderRadius: "8px",
-                    border: "none",
-                    boxShadow: "0 4px 12px rgba(0,0,0,0.08)",
+                    border: "1px solid #1f2937",
+                    backgroundColor: "#111827",
+                    color: "#f3f4f6",
+                    boxShadow: "0 4px 12px rgba(0,0,0,0.5)",
                     fontSize: "12px",
                   }}
                 />
@@ -281,13 +285,13 @@ export default function Dashboard() {
 
       {/* ── Follow-Up Alert Banner ── */}
       {!loading && !error && leadsRequiringAttention.length > 0 && (
-        <div className="flex items-start gap-3 rounded-xl border border-amber-200 bg-amber-50 p-4">
+        <div className="flex items-start gap-3 rounded-xl border border-amber-800/50 bg-amber-900/20 p-4">
           <FiAlertCircle className="mt-0.5 h-5 w-5 flex-shrink-0 text-amber-500" />
           <div>
-            <p className="text-sm font-semibold text-amber-900">
+            <p className="text-sm font-semibold text-amber-400">
               Leads Requiring Attention
             </p>
-            <p className="mt-0.5 text-sm text-amber-800">
+            <p className="mt-0.5 text-sm text-amber-300">
               {leadsRequiringAttention.length} lead
               {leadsRequiringAttention.length > 1 ? "s" : ""} have a follow-up
               due today or earlier.
@@ -297,11 +301,11 @@ export default function Dashboard() {
       )}
 
       {/* ── Recent Leads ── */}
-      <div className="rounded-xl bg-white shadow-sm ring-1 ring-gray-200 overflow-hidden w-full">
+      <div className="rounded-xl bg-gray-900 shadow-md border border-gray-800 overflow-hidden w-full">
 
         {/* Card header */}
-        <div className="flex items-center justify-between border-b border-gray-100 px-5 py-4">
-          <h2 className="text-base font-semibold text-gray-900">Recent Leads</h2>
+        <div className="flex items-center justify-between border-b border-gray-800 px-5 py-4">
+          <h2 className="text-base font-semibold text-white">Recent Leads</h2>
           <Link
             href="/dashboard/leads"
             className="text-sm font-medium text-blue-600 transition hover:text-blue-700"
@@ -346,18 +350,18 @@ export default function Dashboard() {
               .map((lead, idx, arr) => (
                 <li
                   key={lead._id}
-                  className={idx < arr.length - 1 ? "border-b border-gray-100" : ""}
+                  className={idx < arr.length - 1 ? "border-b border-gray-800" : ""}
                 >
                   <Link
                     href={`/dashboard/leads/${lead._id}`}
-                    className="flex items-center justify-between px-5 py-4 transition hover:bg-gray-50"
+                    className="flex items-center justify-between px-5 py-4 transition hover:bg-gray-800/50"
                   >
                     {/* Lead info */}
                     <div className="min-w-0">
-                      <p className="truncate text-sm font-medium text-gray-900">
+                      <p className="truncate text-sm font-medium text-white">
                         {lead.name}
                       </p>
-                      <p className="mt-0.5 truncate text-xs text-gray-500">
+                      <p className="mt-0.5 truncate text-xs text-gray-400">
                         {lead.email}
                       </p>
                     </div>
@@ -365,7 +369,7 @@ export default function Dashboard() {
                     {/* Status badge */}
                     <span
                       className={`ml-4 flex-shrink-0 rounded-full px-2.5 py-1 text-xs font-medium capitalize ${
-                        STATUS_BADGE[lead.status] ?? "bg-gray-100 text-gray-600"
+                        STATUS_BADGE[lead.status] ?? "bg-gray-800 text-gray-400"
                       }`}
                     >
                       {lead.status}
