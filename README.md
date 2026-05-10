@@ -4,6 +4,31 @@ A full-stack Client Lead Management System designed to help businesses track, ma
 
 ---
 
+## 📸 Preview
+
+### Landing Page
+![Landing Page](./screenshots/landing.png)
+
+### Login Page
+![Login Page](./screenshots/login.png)
+
+### Dashboard
+![Dashboard](./screenshots/dashboard.png)
+
+### Leads Pipeline
+![Leads Pipeline](./screenshots/leads.png)
+
+### Lead Details
+![Lead Details](./screenshots/leadDetail.png)
+
+### Add New Lead
+![Add New Lead](./screenshots/addLead.png)
+
+### Settings
+![Settings](./screenshots/settings.png)
+
+
+
 ## ✨ Features
 
 ### ✅ Core Features
@@ -135,31 +160,6 @@ To explore the dashboard and features locally, use the following credentials:
 - **Password:** `admin123`
 
 ---
-
-## 📸 Preview
-
-### Landing Page
-![Landing Page](./screenshots/landing.png)
-
-### Login Page
-![Login Page](./screenshots/login.png)
-
-### Dashboard
-![Dashboard](./screenshots/dashboard.png)
-
-### Leads Pipeline
-![Leads Pipeline](./screenshots/leads.png)
-
-### Lead Details
-![Lead Details](./screenshots/leadDetail.png)
-
-### Add New Lead
-![Add New Lead](./screenshots/addLead.png)
-
-### Settings
-![Settings](./screenshots/settings.png)
-
-
 
 ---
 
